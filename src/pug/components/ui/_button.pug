@@ -1,0 +1,5 @@
+mixin button(type, text)
+    - type = type || 'button'
+    - text = text || ''
+
+    button.btn(type=`${type}`)= text

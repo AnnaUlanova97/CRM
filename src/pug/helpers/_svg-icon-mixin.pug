@@ -1,0 +1,7 @@
+mixin svg-icon(name, mod)
+    - name = name || ''
+    - mod = mod || ''
+
+    if name
+        svg(class=`icon${mod ? ' ' + mod : ''}`)
+            use(xlink:href=`#${name}`)

@@ -1,0 +1,52 @@
+{
+  "name": "untitled",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "module": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development gulp",
+    "build": "cross-env NODE_ENV=production gulp"
+  },
+  "author": "German Stolyarov",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.10",
+    "@babel/register": "^7.22.5",
+    "autoprefixer": "^10.4.15",
+    "browser-sync": "^2.29.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.8.1",
+    "cssnano": "^6.0.1",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-imagemin": "^8.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^9.0.1",
+    "gulp-pug": "^5.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-stacksvg": "^2.0.2",
+    "gulp-ttf2woff2": "^4.0.1",
+    "postcss-color-function": "^4.1.0",
+    "postcss-preset-env": "^9.1.1",
+    "pug": "^3.0.2",
+    "pump": "^3.0.0",
+    "sass": "^1.65.1",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-stream": "^7.0.0",
+    "ymaps": "^0.2.1"
+  },
+  "keywords": [],
+  "description": "",
+  "dependencies": {
+    "@fancyapps/ui": "^5.0.22",
+    "axios": "^1.5.0",
+    "swiper": "^10.1.0",
+    "tippy.js": "^6.3.7"
+  }
+}

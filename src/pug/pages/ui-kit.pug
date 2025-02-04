@@ -1,0 +1,148 @@
+extends ../templates/_ui-kit
+
+block vars
+  -
+      var params = {
+          pageType: 'home',
+          pageTitle: 'Hello, developer!'
+      }
+
+block content
+    main.main
+        .container
+            .ui
+                .ui-header
+                    .ui-title UI Kit
+                .ui-container
+                    .ui-subtitle Buttons
+                    .ui-content
+                        button.btn-primary Button Primary
+                        button.btn-secondary Button Secondary
+
+                .ui-container
+                    .ui-subtitle Inputs
+                    .ui-content
+                        .input-group(data-group-name='first_name')
+                            label.field.isRequired
+                                span.field__label Имя
+                                input.field__input(type='text' name='first_name' placeholder='Введите имя' required)
+                            small.input-group__message.isError Поле обязательно для заполнения
+
+                        .input-group(data-group-name='last_name')
+                            label.field
+                                span.field__label Фамилия
+                                input.field__input.input(type='text' name='last_name' placeholder='Введите фамилию' value='Иванов')
+                            small.input-group__message.isSuccess Успешно заполнено
+
+                .ui-container
+                    .ui-subtitle Colors
+                    .ui-content
+                        .ui-color(style='--color: var(--color-black)')
+                            .ui-color__bg
+                            .ui-color__hex-code.js-copy.js-tooltip(data-tooltip-content='Скопировано!') #000000
+                            .ui-color__var-name.js-copy.js-tooltip(data-tooltip-content='Скопировано!') var(--color-black)
+
+                        .ui-color(style='--color: var(--color-white)')
+                            .ui-color__bg
+                            .ui-color__hex-code.js-copy.js-tooltip(data-tooltip-content='Скопировано!') #ffffff
+                            .ui-color__var-name.js-copy.js-tooltip(data-tooltip-content='Скопировано!') var(--color-white)
+
+                        .ui-color(style='--color: var(--color-primary)')
+                            .ui-color__bg
+                            .ui-color__hex-code.js-copy.js-tooltip(data-tooltip-content='Скопировано!') #42d392
+                            .ui-color__var-name.js-copy.js-tooltip(data-tooltip-content='Скопировано!') var(--color-primary)
+
+                        .ui-color(style='--color: var(--color-secondary)')
+                            .ui-color__bg
+                            .ui-color__hex-code.js-copy.js-tooltip(data-tooltip-content='Скопировано!') #647eff
+                            .ui-color__var-name.js-copy.js-tooltip(data-tooltip-content='Скопировано!') var(--color-secondary)
+
+                .ui-container
+                    .ui-subtitle Typography
+                    .ui-content.column
+                        h1 Заголовок первого уровня
+                        h2 Заголовок второго уровня
+                        h3 Заголовок третьего уровня
+                        h4 Заголовок четвертого уровня
+                        h5 Заголовок пятого уровня
+                        h6 Заголовок шестого уровня
+
+
+    style.
+        .ui {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 100px;
+        }
+
+        .ui-header {
+            padding: 30px;
+            border-bottom: 2px solid darkviolet;
+        }
+
+        .ui-title {
+            font-size: 40px;
+            font-weight: bold;
+            color: darkviolet;
+        }
+
+        .ui-subtitle {
+            padding: 0 30px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: darkviolet;
+        }
+
+        .ui-content {
+            padding: 30px;
+            border: 2px dashed darkviolet;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .column {
+            flex-direction: column;
+        }
+
+        .ui-color {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 0 10px #ccc;
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .ui-color__bg {
+            width: 100%;
+            height: 60px;
+            background-color: var(--color);
+            box-shadow: 0 0 2px #c8c8c8;
+        }
+
+        .ui-color__hex-code {
+            font-family: monospace;
+            cursor: pointer;
+            color: dimgrey;
+        }
+
+        .ui-color__var-name {
+            padding: 4px 6px;
+            background-color: #eae8e8;
+            color: deeppink;
+            font-family: monospace;
+            font-size: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+    script.
+      document.querySelectorAll('.js-copy')
+        .forEach((item) => {
+          item.addEventListener('click', () => {
+              copyToClipboard(item.textContent).then(() => {})
+          })
+        })

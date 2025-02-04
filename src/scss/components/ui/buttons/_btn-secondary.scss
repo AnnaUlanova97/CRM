@@ -1,0 +1,12 @@
+.btn-secondary {
+  @extend .btn;
+  @include transition((background-color));
+
+  background-color: var(--color-secondary);
+  padding: 10px;
+  color: var(--color-white);
+
+  &:hover {
+    background-color: color-mix(in oklch, var(--color-secondary), var(--color-black) 10%);
+  }
+}

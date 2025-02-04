@@ -1,0 +1,22 @@
+include ../helpers/__include
+include ../components/__include
+
+block vars
+  -
+      const params = {
+          pageTitle: 'UI Kit'
+      }
+
+doctype
+html(lang='ru' data-theme='default')
+
+    +head(params)
+
+    body.js-body(class=`${params.pageType}-page`)
+        #__SVG-container__
+
+        block content
+
+        script(src=`/js/common.bundle.js` defer)
+
+

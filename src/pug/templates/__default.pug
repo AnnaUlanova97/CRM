@@ -1,0 +1,26 @@
+include ../helpers/__include
+include ../components/__include
+
+block vars
+    -
+        const params = {
+            pageTitle: 'CRM'
+        }
+
+doctype
+html(lang='ru' data-theme='default')
+
+    +head(params)
+
+    body.js-body(class=`${params.pageType}-page`)
+        #__SVG-container__
+
+        +header()
+
+        block content
+
+        +footer()
+
+        script(src=`/js/common.bundle.js` defer)
+        script(src=`/js/${params.pageType.toLowerCase()}.bundle.js` defer)
+

@@ -1,0 +1,16 @@
+.input-group {
+  &__message {
+
+    &:empty {
+      display: none;
+    }
+
+    &.isError {
+      color: var(--color-error);
+    }
+
+    &.isSuccess {
+      color: var(--color-success);
+    }
+  }
+}

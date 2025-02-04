@@ -1,0 +1,30 @@
+.field {
+  $this: &;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &.isRequired {
+
+    #{$this}__label {
+      &:after {
+        content: '*';
+        color: var(--color-required);
+      }
+    }
+  }
+
+  &__label {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  &__input {
+    @extend %reset-input;
+
+    display: flex;
+    padding: 5px 10px;
+    border: 1px solid var(--color-black);
+  }
+}

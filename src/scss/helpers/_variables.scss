@@ -1,0 +1,21 @@
+$imagesPath: '/media/images/';
+
+:root {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-primary: #42d392;
+  --color-secondary: #647eff;
+  --color-error: #b90202;
+  --color-required: var(--color-error);
+  --color-success: #0bb90b;
+
+  --icon-fill: currentColor;
+  --icon-stroke: none;
+
+  --container-width: 1440px;
+
+  --font-default: Arial, sans-serif;
+
+  --transition-duration: .3s;
+  --transition-timing-function: ease;
+}

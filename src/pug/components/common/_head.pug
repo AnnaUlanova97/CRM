@@ -1,0 +1,40 @@
+mixin head(params)
+    -
+        const preloadFonts = [
+            'OpenSans-Bold',
+            'OpenSans-Regular',
+            'OpenSans-SemiBold'
+        ]
+
+    head
+        title= params.pageTitle
+        link(href='/css/app.min.css' rel='stylesheet' media='all')
+        meta(name="viewport" content="width=device-width,initial-scale=1")
+
+        each fontName in preloadFonts
+            link(
+                rel='preload'
+                href=`/fonts/${fontName}/${fontName}.woff2`
+                as='font'
+                type='font/woff2'
+                crossorigin='anonymous'
+            )
+
+        script.
+            // info: Для записи данных с бекенда для получения и обработки в JS.
+            window.APP = {
+                // Режим работы проекта
+                mode: 'development',
+                // Путь до спрайта иконок
+                svgSpritePath: '/media/icons/sprite.svg',
+                // Данные для Яндекс.Метрики
+                ym: {
+                    id: 696969
+                },
+                sessid: null,
+                pageType: null,
+                routes: {
+                    basket: '/basket',
+                    product: '/product'
+                }
+            }
