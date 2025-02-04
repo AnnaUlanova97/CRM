@@ -3,7 +3,7 @@ $imagesPath: '/media/images/';
 :root {
   --color-black: #000000;
   --color-white: #ffffff;
-  --color-primary: #42d392;
+  --color-primary: #B0B0B0;
   --color-secondary: #647eff;
   --color-error: #b90202;
   --color-required: var(--color-error);
@@ -12,9 +12,9 @@ $imagesPath: '/media/images/';
   --icon-fill: currentColor;
   --icon-stroke: none;
 
-  --container-width: 1440px;
+  --container-width: 1366px;
 
-  --font-default: Arial, sans-serif;
+  --font-default: 'Open Sans', sans-serif;
 
   --transition-duration: .3s;
   --transition-timing-function: ease;
