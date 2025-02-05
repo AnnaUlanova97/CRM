@@ -1,0 +1,43 @@
+h1 {
+    margin: 0;
+}
+
+.clients {
+    background-color:#F5F5F5;
+
+    &__container {
+        padding: 40px 90px;
+
+        & h1 {
+            margin-bottom: 26px;
+        }
+    }
+
+    &__title {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 32px;
+        color: var(--color-black);
+    }
+
+    &__filter {
+        padding: 0px 20px;
+        display: grid;
+        gap: 28px;
+        grid-template-columns: 5% 29.5% 13% 12.5% 11.5% 1fr;
+    }
+
+    &__filter span {
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--color-primary);
+    }
+
+    &__filter p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--color-secondary);
+    }
+
+}

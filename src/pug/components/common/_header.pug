@@ -1,20 +1,8 @@
 mixin header()
-    header.header.js-header
-        div.container.header__container 
+    header.header.container
+        div.header__container 
             +svg-icon('logo', 'header__icon')
             form(action="")
                 input(type="text", placeholder="Введите запрос").header__search
         
-        //- .container
-            //- +svg-icon('building', 'header__icon')
-        //-     +svg-icon('brush', 'header__icon')
-
-        //-     +svg-icon('home', 'header__icon')
-        //-     +svg-icon('menu', 'header__icon')
-
-        //-     button(type='button')
-        //-         +svg-icon('times', 'header__icon')
-
-        //-     button(type='button')
-        //-         +svg-icon('close', 'header__icon')
-
+    

@@ -1,23 +1,61 @@
 .header {
     &__container {
+        position: relative;
         display: flex;
         align-items: center;
         gap: 53px;
         padding: 20px;
+        z-index: 10; 
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        
+        @media (max-width: 976px) {
+            justify-content: flex-start;
+        }
 
+        @media (max-width: 480px) {
+            justify-content: center;
+            padding: 8px;
+        }
     }
+
     &__icon {
         width: 50px;
         height: 50px;
+
+        @media (max-width: 480px) {
+            width: 24px;
+            height: 24px;
+        }
     }
+
     form {
         width: 43%;
+
+        @media (max-width: 1360px) {
+            width: 58%;
+        }
+
+        @media (max-width: 976px) {
+            width: 78%;
+        }
+
+        @media (max-width: 480px) {
+            display: none;
+        }
     }
+
     &__search {
-        width: 93%;
+        width: 96%;
         padding: 12px 16px;
         border: 1px solid rgba(51, 51, 51, 0.2);
+        font-size: 14px;
         color: var(--color-primary);
         outline: none;
+
+        @media (max-width: 1360px) {
+            font-size: 14px;
+        }
     }
 }
+
+
