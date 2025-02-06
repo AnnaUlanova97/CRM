@@ -4,7 +4,7 @@ block vars
   -
       var params = {
           pageType: 'home',
-          pageTitle: 'Hello, developer!'
+          pageTitle: 'CRM'
       }
     
 block content
@@ -14,13 +14,36 @@ block content
                 h1.clients__title Клиенты    
                 div.clients__form 
                     div.clients__filter
-                        p.clients__id ID
-                        span.clients__name Фамилия Имя Отчество
-                        span.clients__date Дата и время создания
-                        span.clients__changes Последние изменения
-                        span.clients__contacts Контакты
-                        span.clients__actions Действия
+                        p.clients__title_id ID
+                            button.clients__arrow
+                                 +svg-icon('arrow_downward', 'clients__icon')
+                        p.clients__title_name Фамилия Имя Отчество 
+                            button.clients__arrow
+                                 +svg-icon('arrow_downward', 'clients__icon')
+                            span А-Я
+                        p.clients__title_date Дата и время создания
+                            button.clients__arrow.clients__arrow_date
+                                 +svg-icon('arrow_downward', 'clients__icon')
+                        p.clients__title_changes Последние изменения
+                            button.clients__arrow.clients__arrow_changes
+                                 +svg-icon('arrow_downward', 'clients__icon')
+                        p.clients__title_contacts Контакты
+                        p.clients__title_actions Действия
                     div.clients__wrap 
+                        ul.clients__inner 
+                            li.clients__id  11111
+                            li.clients__name Скворцов Денис Юрьевич
+                            li.clients__date 21.02.2021 12:41
+                            li.clients__changes 21.02.2021 12:41
+                            li.clients__contacts  
+                                a(href="#") svg 
+                            li.clients__actions Изменить
+                            li.clients__delete Удалить
+                        //- +svg-icon('frame', 'clients__frame')
+                div.clients__btn
+                    button.clients__add
+                        +svg-icon('btn-add', 'clients__svg')
+                        span Добавить клиента
                         
             
        
