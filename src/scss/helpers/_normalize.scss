@@ -75,6 +75,7 @@ pre {
 
 a {
   background-color: transparent;
+  text-decoration: none;
 }
 
 /**
@@ -166,6 +167,8 @@ textarea {
   font-size: 100%; /* 1 */
   line-height: 1.15; /* 1 */
   margin: 0; /* 2 */
+  padding: 0;
+  background-color: transparent;
 }
 
 /**
@@ -346,4 +349,26 @@ template {
 
 [hidden] {
   display: none;
+}
+
+h1 {
+  margin: 0;
+}
+
+p {
+  display: inline-block;
+  margin: 0;
+}
+
+button {
+  border: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
 }

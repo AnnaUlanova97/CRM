@@ -8,65 +8,53 @@ block vars
       }
     
 block content
-    main.main.container
-        // Лишний лив
-        div.clients
-            //Лишний див
-            div.clients__container
-                h1.clients__title Клиенты
-                // Уместнее использовать table или content
-                div.clients__form 
-                    div.clients__filter
-                        // Не параграф. Не уместное использование модификатора.
-                        p.clients__title_id ID
-                            button.clients__arrow
-                                 +svg-icon('arrow_downward', 'clients__icon')
-                        p.clients__title_name Фамилия Имя Отчество 
-                            button.clients__arrow
-                                 +svg-icon('arrow_downward', 'clients__icon')
-                            // Это svg
-                            span А-Я
-                        // Нет абсолюта
-                        p.clients__title_date Дата и время создания
-                            button.clients__arrow.clients__arrow_date
-                                 +svg-icon('arrow_downward', 'clients__icon')
-                        p.clients__title_changes Последние изменения
-                            button.clients__arrow.clients__arrow_changes
-                                 +svg-icon('arrow_downward', 'clients__icon')
-                        p.clients__title_contacts Контакты
-                        p.clients__title_actions Действия
-                    div.clients__wrap 
-                        ul.clients__inner 
-                            li.clients__id  111112
-                            li.clients__name Скворцов Денис Юрьевич
-                            li.clients__date 21.02.2021 
-                                span.clients__time 12:41
-                            li.clients__changes 21.02.2021 
-                                span.clients__time 12:41
-                            li.clients__contacts
-                                //Это кнопка
-                                a(href="#") 
-                                    +svg-icon('vk', 'form-icon')
-                                a(href="#") 
-                                    +svg-icon('mail', 'form-icon')
-                                a(href="#") 
-                                    +svg-icon('fb', 'form-icon')
-                                a(href="#") 
-                                    +svg-icon('phone', 'form-icon')
-                                a(href="#") 
-                                    +svg-icon('ellipse', 'form-icon_ellipse')
-                            li.clients__actions 
-                                button.clients__btn_svg Изменить
-                                    +svg-icon('actions', 'form-icon')
-                                button.clients__btn_svg Удалить
-                                     +svg-icon('cancel', 'form-icon_cancel')
-                        //- +svg-icon('frame', 'clients__frame')
-
-                // Лишний контейнер
-                div.clients__btn
-                    button.clients__add
-                        +svg-icon('btn-add', 'clients__svg')
-                        span Добавить клиента
-                        
+    main.main.container.clients
+        h1.clients__title Клиенты
+        div.clients__table 
+            div.clients__filters
+                div.clients__headline ID
+                    button.clients__arrow
+                            +svg-icon('arrow_downward', 'clients__icon')
+                div.clients__headline Фамилия Имя Отчество 
+                    button.clients__arrow
+                            +svg-icon('arrow-az', 'clients__icon')
+                div.clients__headline.clients__headline--max Дата и время создания
+                    button.clients__arrow.clients__arrow_date
+                            +svg-icon('arrow_downward', 'clients__icon')
+                div.clients__headline.clients__headline--max Последние изменения
+                    button.clients__arrow.clients__arrow_changes
+                            +svg-icon('arrow_downward', 'clients__icon')
+                div.clients__headline Контакты
+                div.clients__headline Действия
+            div.clients__wrap 
+                ul.clients__inner.clients__filters 
+                    li.clients__item  111112
+                    li.clients__item Скворцов Денис Юрьевич
+                    li.clients__item 21.02.2021 
+                        span.clients__time 12:41
+                    li.clients__item 21.02.2021 
+                        span.clients__time 12:41
+                    li.clients__item
+                        button
+                            +svg-icon('vk', 'form-icon')
+                        button 
+                            +svg-icon('mail', 'form-icon')
+                        button 
+                            +svg-icon('fb', 'form-icon')
+                        button 
+                            +svg-icon('phone', 'form-icon')
+                        button 
+                            +svg-icon('ellipse', 'form-icon_ellipse')
+                    li.clients__item
+                        button.clients__btn_svg Изменить
+                            +svg-icon('actions', 'form-icon')
+                        button.clients__btn_svg Удалить
+                                +svg-icon('cancel', 'form-icon_cancel')
+                //- +svg-icon('frame', 'clients__frame')
+        button.clients__add
+                +svg-icon('btn-add', 'clients__svg')
+                span Добавить клиента
             
-       
+                
+        
+    
