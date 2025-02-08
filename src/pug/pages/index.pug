@@ -9,18 +9,24 @@ block vars
     
 block content
     main.main.container
+        // Лишний лив
         div.clients
+            //Лишний див
             div.clients__container
-                h1.clients__title Клиенты    
+                h1.clients__title Клиенты
+                // Уместнее использовать table или content
                 div.clients__form 
                     div.clients__filter
+                        // Не параграф. Не уместное использование модификатора.
                         p.clients__title_id ID
                             button.clients__arrow
                                  +svg-icon('arrow_downward', 'clients__icon')
                         p.clients__title_name Фамилия Имя Отчество 
                             button.clients__arrow
                                  +svg-icon('arrow_downward', 'clients__icon')
+                            // Это svg
                             span А-Я
+                        // Нет абсолюта
                         p.clients__title_date Дата и время создания
                             button.clients__arrow.clients__arrow_date
                                  +svg-icon('arrow_downward', 'clients__icon')
@@ -37,7 +43,8 @@ block content
                                 span.clients__time 12:41
                             li.clients__changes 21.02.2021 
                                 span.clients__time 12:41
-                            li.clients__contacts  
+                            li.clients__contacts
+                                //Это кнопка
                                 a(href="#") 
                                     +svg-icon('vk', 'form-icon')
                                 a(href="#") 
@@ -54,6 +61,8 @@ block content
                                 button.clients__btn_svg Удалить
                                      +svg-icon('cancel', 'form-icon_cancel')
                         //- +svg-icon('frame', 'clients__frame')
+
+                // Лишний контейнер
                 div.clients__btn
                     button.clients__add
                         +svg-icon('btn-add', 'clients__svg')
