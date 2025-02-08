@@ -20,9 +20,14 @@ li {
     list-style-type: none;
 }
 
+a {
+    text-decoration: none;
+}
+
 .clients {
     min-height: 1vh;
     background-color:#f5f5f5;
+    color: var(--color-black);
 
     &__container {
         padding: 40px 90px 100px;
@@ -61,15 +66,13 @@ li {
     }
 
     &__filter {
-        padding: 0px 20px;
         display: grid;
-        gap: 20px;
-        grid-template-columns: 5% 30.5% 14% 13.5% 12% 1fr;
-
+        gap: 5px;
+        grid-template-columns: 6.5% 30.5% 15% 14.5% 13% 1fr;
         @media (max-width: 1360px) {
-            gap: 23px;
+            gap: 5px;
             align-items: end;
-            grid-template-columns: 5% 22.5% 14% 13.5% 13% 1fr;
+            grid-template-columns: 7% 22.5% 15% 14.5% 16% 1fr;
         }
 
         @media (max-width: 976px) {
@@ -91,6 +94,7 @@ li {
     &__filter p {
         display: flex;
         align-items: center;
+        padding: 0 0 0 20px;
         font-size: 12px;
         line-height: 16px;
         color: var(--color-primary);
@@ -105,7 +109,7 @@ li {
     &__arrow_date {
         @media (max-width: 1360px) {
             position: absolute;
-            left: 58px;
+            left: 75px;
             top: 18px;
         }
 
@@ -123,7 +127,7 @@ li {
     &__arrow_changes{
         @media (max-width: 1360px) {
             position: absolute;
-            left: 68px;
+            left: 85px;
             top: 18px;
         }
 
@@ -237,15 +241,22 @@ li {
     &__inner {
         display: grid;
         gap: 10px;
-        grid-template-columns: 1fr 7fr 3fr 3fr 3fr 2fr 2fr;;
+        grid-template-rows: 60px;
+        grid-template-columns:  1fr 7fr 3fr 3fr 3fr 4fr;
         border-bottom: 1px solid #C8C5D1;
 
+        @media (max-width: 1360px) {
+            gap: 5px;
+            grid-template-columns:  60px 7fr 3fr 3fr 3fr 4fr;
+        }
+
         & li {
-            padding: 20px;
+            padding: 0 20px;
+            margin: auto 0;
         }
 
         &:not(:first-of-type) {
-            font-size: 14px
+            font-size: 14px;
         }
     }
 
@@ -256,5 +267,49 @@ li {
 
     &__name, &__date, &__changes, &__contacts, &__actions, &__delete {
         font-size: 14px;
+    }
+
+    &__actions {
+        display: flex;
+    }
+
+    &__time {
+        color: var(--color-primary);
+    }
+
+    &__btn_svg {
+        display: flex;
+        flex-direction: row-reverse;    
+        background-color: #ffffff;
+        color: var(--color-black);
+    }
+
+    &__contacts {
+        display: flex;
+        gap: 7px;
+
+        & a {
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+.form-icon {
+    width: 16px;
+    height: 16px;
+    fill: #9873FF;
+
+    &_cancel {
+        width: 16px;
+        height: 16px;
+        fill: #F06A4D;
+    }
+    
+    &_ellipse {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: #9873FF;
     }
 }

@@ -31,14 +31,28 @@ block content
                         p.clients__title_actions Действия
                     div.clients__wrap 
                         ul.clients__inner 
-                            li.clients__id  11111
+                            li.clients__id  111112
                             li.clients__name Скворцов Денис Юрьевич
-                            li.clients__date 21.02.2021 12:41
-                            li.clients__changes 21.02.2021 12:41
+                            li.clients__date 21.02.2021 
+                                span.clients__time 12:41
+                            li.clients__changes 21.02.2021 
+                                span.clients__time 12:41
                             li.clients__contacts  
-                                a(href="#") svg 
-                            li.clients__actions Изменить
-                            li.clients__delete Удалить
+                                a(href="#") 
+                                    +svg-icon('vk', 'form-icon')
+                                a(href="#") 
+                                    +svg-icon('mail', 'form-icon')
+                                a(href="#") 
+                                    +svg-icon('fb', 'form-icon')
+                                a(href="#") 
+                                    +svg-icon('phone', 'form-icon')
+                                a(href="#") 
+                                    +svg-icon('ellipse', 'form-icon_ellipse')
+                            li.clients__actions 
+                                button.clients__btn_svg Изменить
+                                    +svg-icon('actions', 'form-icon')
+                                button.clients__btn_svg Удалить
+                                     +svg-icon('cancel', 'form-icon_cancel')
                         //- +svg-icon('frame', 'clients__frame')
                 div.clients__btn
                     button.clients__add
