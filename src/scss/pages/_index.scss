@@ -25,7 +25,7 @@
         }
 
         @media (max-width: 480px) {
-            margin-bottom: 22px;
+            margin-bottom: 6px;
         }
     }
        
@@ -60,14 +60,15 @@
         }
 
         @media (max-width: 480px) {
-            
+            grid-template-columns: minmax(60px, 65px) minmax(217px, 240px) minmax(100px, 100px) minmax(98px, 100px) minmax(129px, 129px) minmax(95px, 96px);
         }
     }
 
 
 
     &__headline {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         font-size: 12px;
         line-height: 16px;
         color: var(--color-primary);
@@ -85,10 +86,19 @@
 
     &__wrap {
         min-height: 300px;
+        width: fit-content;
         display: flex;
         flex-direction: column;
         align-items: center; 
         background-color: #ffffff;
+    }
+
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
     }
 
 
@@ -98,12 +108,18 @@
         flex-direction: column;
         gap: 8px;
 
-        // @media (max-width: 480px) {
-        //     max-width: 310px;
-        //     width: fit-content;
-        //     overflow-x: auto;
-        //     overflow-y: hidden;
-        // }
+        @media (max-width: 480px) {
+            max-width: 310px;
+            width: fit-content;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    }
+
+
+
+    &__time {
+        color: var(--color-primary);
     }
 
 
@@ -140,74 +156,14 @@
             color: var(--color-primary);
         }
 
-        @media (max-width: 976px)  {
-           
+        &:last-child {
+            gap: 28px;
+
+            @media (max-width: 976px) {
+                gap: 9px;
+            }
         }
     }
-    
-
-   
-
-  
-
-   
-    // &__add {
-    //     transition: .3s linear;
-
-    //     &:hover {
-    //         background-color: var(--color-secondary);
-    //     }
-
-    //     &:hover svg {
-    //         fill: var(--color-white);
-    //        }
-
-    //     &:hover span {
-    //         color: var(--color-white);
-    //     }
-
-    //     &:active {
-    //         background-color: var(--color-active);
-    //     }
-
-    //     &:active svg {
-    //         fill: var(--color-white);
-    //        }
-
-    //     &:active span {
-    //         color: var(--color-white);
-    //     }
-    // }
-
-    // 
-
-
-
-
-
-
-    // &__btn_svg {
-    //     display: flex;
-    //     flex-direction: row-reverse;    
-    //     background-color: #ffffff;
-    //     color: var(--color-black);
-    // }
-
-    // &__contacts {
-    //     display: flex;
-    //     gap: 7px;
-
-    //     & a {
-    //         display: flex;
-    //         align-items: center;
-    //     }
-    // }
-
-    // &__icon,
-    // &__arrow {
-    //     width: 12px;
-    //     height: 12px;
-    // }
 }
 
 
