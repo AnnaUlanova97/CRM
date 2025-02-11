@@ -45,7 +45,7 @@
 
 
 
-    &__filters {
+    &__table {
         display: grid;
         grid-template-columns: minmax(63px, 82px) minmax(300px, 369px) minmax(100px, 175px) minmax(100px, 173px) minmax(100px, 160px) minmax(100px, 186px);
         padding: 0 20px;
@@ -103,7 +103,7 @@
 
 
 
-    &__table {
+    &__filters {
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -169,7 +169,7 @@
 
 
 
-.form-icon {
+.table-icon {
     width: 16px;
     height: 16px;
     fill: #9873FF;

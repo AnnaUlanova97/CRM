@@ -11,8 +11,8 @@ block content
     main.main.container.clients
         h1.clients__title Клиенты
         div.clients__content
-            div.clients__table 
-                div.clients__filters
+            div.clients__filters 
+                div.clients__table
                     div.clients__headline ID
                         button.clients__arrow
                                 +svg-icon('arrow_downward', 'clients__icon')
@@ -28,7 +28,7 @@ block content
                     div.clients__headline Контакты
                     div.clients__headline Действия
                 div.clients__wrap 
-                    ul.clients__inner.clients__filters 
+                    ul.clients__inner.clients__table
                         li.clients__item  111112
                         li.clients__item Скворцов Денис Юрьевич
                         li.clients__item 21.02.2021 
@@ -37,20 +37,20 @@ block content
                             span.clients__time 12:41
                         li.clients__item
                             button
-                                +svg-icon('vk', 'form-icon')
+                                +svg-icon('vk', 'table-icon')
                             button 
-                                +svg-icon('mail', 'form-icon')
+                                +svg-icon('mail', 'table-icon')
                             button 
-                                +svg-icon('fb', 'form-icon')
+                                +svg-icon('fb', 'table-icon')
                             button 
-                                +svg-icon('phone', 'form-icon')
+                                +svg-icon('phone', 'table-icon')
                             button 
-                                +svg-icon('ellipse', 'form-icon_ellipse')
+                                +svg-icon('ellipse', 'table-icon_ellipse')
                         li.clients__item
                             button.clients__btn.clients__btn--change Изменить
-                                +svg-icon('actions', 'form-icon')
+                                +svg-icon('actions', 'table-icon')
                             button.clients__btn.clients__btn--cancel Удалить
-                                +svg-icon('cancel', 'form-icon_cancel')
+                                +svg-icon('cancel', 'table-icon_cancel')
                 //- +svg-icon('frame', 'clients__frame')
             button.clients__add
                 +svg-icon('btn-add', 'clients__svg')
