@@ -55,6 +55,25 @@ block content
             button.clients__add
                 +svg-icon('btn-add', 'clients__svg')
                 span Добавить клиента
+        div.modal 
+            div.modal__content
+                h2.modal__title Изменить данные
+                span.modal__id ID: 123458
+                button.modal__close
+                    +svg-icon('close-form', 'close-icon')
+                form(action="").modal__form
+                    label Фамилия*
+                        input(type="text" required)
+                    label Имя*
+                        input(type="text" required)
+                    label Отчество
+                        input(type="text")
+            div.modal__add
+                button Добавить контакт
+                    +svg-icon('add_circle_outline', 'add-icon')
+            div.modal__actions
+                button.btn__save Сохранить
+                button Удалить клиента
             
                 
         

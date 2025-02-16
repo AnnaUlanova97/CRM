@@ -150,3 +150,5 @@ function renderClient(client) {
 }
 
 renderClient(client);
+
+document.querySelector(".clients__add").addEventListener("click", (e) => {});

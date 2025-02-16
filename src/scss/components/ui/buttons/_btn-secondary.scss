@@ -2,7 +2,7 @@
   @extend .btn;
   @include transition((background-color));
 
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   padding: 10px;
   color: var(--color-white);
 
