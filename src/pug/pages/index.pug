@@ -13,20 +13,16 @@ block content
         div.clients__content
             div.clients__filters 
                 div.clients__table
-                    div.clients__headline ID
-                        button.clients__arrow
-                                +svg-icon('arrow_downward', 'clients__icon')
-                    div.clients__headline Фамилия Имя Отчество 
-                        button.clients__arrow--az
-                                +svg-icon('arrow-az', 'clients__icon--az')
-                    div.clients__headline.clients__headline--max Дата и время создания
-                        button.clients__arrow.clients__arrow_date
-                                +svg-icon('arrow_downward', 'clients__icon')
-                    div.clients__headline.clients__headline--max Последние изменения
-                        button.clients__arrow.clients__arrow_changes
-                                +svg-icon('arrow_downward', 'clients__icon')
-                    div.clients__headline Контакты
-                    div.clients__headline Действия
+                    button.clients__headline ID
+                        +svg-icon('arrow_downward', 'clients__icon')
+                    button.clients__headline Фамилия Имя Отчество 
+                        +svg-icon('arrow-az', 'clients__icon--az')
+                    button.clients__headline.clients__headline--max Дата и время создания
+                        +svg-icon('arrow_downward', 'clients__icon')
+                    button.clients__headline.clients__headline--max Последние изменения
+                        +svg-icon('arrow_downward', 'clients__icon')
+                    button.clients__headline Контакты
+                    button.clients__headline Действия
                 div.clients__wrap 
                     ul.clients__inner.clients__table
                         li.clients__item  111112
@@ -52,29 +48,40 @@ block content
                             button.clients__btn.clients__btn--cancel Удалить
                                 +svg-icon('cancel', 'table-icon_cancel')
                 //- +svg-icon('frame', 'clients__frame')
-            button.clients__add
+            button.clients__add.js-btn-modal-open(data-modal='modal-open')
                 +svg-icon('btn-add', 'clients__svg')
                 span Добавить клиента
-        div.modal 
-            div.modal__content
-                h2.modal__title Изменить данные
-                span.modal__id ID: 123458
-                button.modal__close
-                    +svg-icon('close-form', 'close-icon')
-                form(action="").modal__form
-                    label Фамилия*
-                        input(type="text" required)
-                    label Имя*
-                        input(type="text" required)
-                    label Отчество
-                        input(type="text")
-            div.modal__add
-                button Добавить контакт
-                    +svg-icon('add_circle_outline', 'add-icon')
-            div.modal__actions
-                button.btn__save Сохранить
-                button Удалить клиента
+        div.modal#modal-open
+            div.modal__box
+                div.modal__content
+                    h2.modal__title Изменить данные
+                    span.modal__id ID: 123458
+                    button.modal__close.js-modal-close
+                        +svg-icon('close-form', 'close-icon')
+                    form(action="").modal__form
+                        label.modal__lastname Фамилия
+                            input(type="text" required)
+                        label.modal__name Имя
+                            input(type="text" required)
+                        label Отчество
+                            input(type="text")
+                div.modal__add.modal__add--open
+                    div.modal__contact
+                        button.modal__contacts.js-btn-modal-open(data-modal='modal-select') Телефон
+                            +svg-icon('arrow_back', 'modal-arrow')
+                        input(type="text" required placeholder='Введите данные контакта').modal__input
+                        div.modal__select#modal-select
+                            button Доп. телефон
+                            button Email
+                            button Vk
+                            button Facebook
+                    button.modal__btn Добавить контакт
+                        +svg-icon('add_circle_outline', 'add-icon')
+                div.modal__actions
+                    button.btn__save Сохранить
+                    button.btn__delete Удалить клиента
+
             
                 
-        
+       
     

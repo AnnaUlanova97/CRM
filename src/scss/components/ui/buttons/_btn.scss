@@ -106,8 +106,20 @@
 
 
 
-.btn__save {
-  padding: 12px 35px;
-  background-color: var(--color-secondary);
-  color: var(--color-white);
+.btn {
+  &__save {
+    padding: 12px 35px;
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+  }
+
+
+
+  &__delete {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    // text-decoration: underline #333333;
+    border-bottom: 1px solid #333333;
+  }
 }

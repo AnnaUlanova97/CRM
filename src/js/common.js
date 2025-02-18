@@ -151,4 +151,16 @@ function renderClient(client) {
 
 renderClient(client);
 
-document.querySelector(".clients__add").addEventListener("click", (e) => {});
+document.body.addEventListener("click", (e) => {
+  const btn = e.target.closest(".js-btn-modal-open");
+  if (btn) {
+    let dataSet = btn.dataset.modal;
+    document.getElementById(dataSet).classList.add("open");
+    return;
+  }
+
+  const closeBtn = e.target.closest(".js-modal-close");
+  if (closeBtn) {
+    closeBtn.closest(".modal").classList.remove("open");
+  }
+});
