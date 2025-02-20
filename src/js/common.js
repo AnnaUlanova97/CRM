@@ -94,6 +94,15 @@ function svgCreate(id, classIcon = "") {
   </svg>`;
 }
 
+
+
+
+
+
+
+// =========================================================
+
+// Функция рендера страницы
 function renderClient(client) {
   const CLIENT_WRAP = document.querySelector(".clients__wrap");
   const CLIENT = document.createElement("ul");
@@ -151,16 +160,21 @@ function renderClient(client) {
 
 renderClient(client);
 
+
+// Открытие модалки
 document.body.addEventListener("click", (e) => {
   const btn = e.target.closest(".js-btn-modal-open");
+  const closeBtn = e.target.closest(".js-modal-close");
+
   if (btn) {
-    let dataSet = btn.dataset.modal;
-    document.getElementById(dataSet).classList.add("open");
-    return;
+    let id = btn.dataset.modal;
+    document.getElementById(id).classList.add("open");
   }
 
-  const closeBtn = e.target.closest(".js-modal-close");
   if (closeBtn) {
     closeBtn.closest(".modal").classList.remove("open");
   }
 });
+
+// Отдельный слушатель для закрытия
+

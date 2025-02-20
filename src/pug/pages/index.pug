@@ -51,6 +51,7 @@ block content
             button.clients__add.js-btn-modal-open(data-modal='modal-open')
                 +svg-icon('btn-add', 'clients__svg')
                 span Добавить клиента
+        // Компонент
         div.modal#modal-open
             div.modal__box
                 div.modal__content
@@ -59,6 +60,7 @@ block content
                     button.modal__close.js-modal-close
                         +svg-icon('close-form', 'close-icon')
                     form(action="").modal__form
+                        //Отдельный компонент или сделать уникальный класс
                         label.modal__lastname Фамилия
                             input(type="text" required)
                         label.modal__name Имя
@@ -66,6 +68,7 @@ block content
                         label Отчество
                             input(type="text")
                 div.modal__add.modal__add--open
+                    //Отельный компонент
                     div.modal__contact
                         button.modal__contacts.js-btn-modal-open(data-modal='modal-select') Телефон
                             +svg-icon('arrow_back', 'modal-arrow')
