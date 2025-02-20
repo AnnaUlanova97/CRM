@@ -51,38 +51,7 @@ block content
             button.clients__add.js-btn-modal-open(data-modal='modal-open')
                 +svg-icon('btn-add', 'clients__svg')
                 span Добавить клиента
-        // Компонент
-        div.modal#modal-open
-            div.modal__box
-                div.modal__content
-                    h2.modal__title Изменить данные
-                    span.modal__id ID: 123458
-                    button.modal__close.js-modal-close
-                        +svg-icon('close-form', 'close-icon')
-                    form(action="").modal__form
-                        //Отдельный компонент или сделать уникальный класс
-                        label.modal__lastname Фамилия
-                            input(type="text" required)
-                        label.modal__name Имя
-                            input(type="text" required)
-                        label Отчество
-                            input(type="text")
-                div.modal__add.modal__add--open
-                    //Отельный компонент
-                    div.modal__contact
-                        button.modal__contacts.js-btn-modal-open(data-modal='modal-select') Телефон
-                            +svg-icon('arrow_back', 'modal-arrow')
-                        input(type="text" required placeholder='Введите данные контакта').modal__input
-                        div.modal__select#modal-select
-                            button Доп. телефон
-                            button Email
-                            button Vk
-                            button Facebook
-                    button.modal__btn Добавить контакт
-                        +svg-icon('add_circle_outline', 'add-icon')
-                div.modal__actions
-                    button.btn__save Сохранить
-                    button.btn__delete Удалить клиента
+    +modal
 
             
                 

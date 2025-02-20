@@ -76,59 +76,8 @@
         display: flex;
         flex-direction: column;
         gap: 15px;
-
-
-       
-        & label {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            font-size: 10px;
-            line-height: 13px;
-            color: var(--color-primary);
-
-
-
-            & input {
-                padding: 5px    ;
-                font-size: 14px;
-                font-weight: 600;
-                line-height: 19px;
-                border-top: none;
-                border-left: none;
-                border-right: none;
-                border-bottom: 1px solid #C8C5D1;
-
-                &:focus-visible {
-                    outline: none;
-                }
-            }
-        }
     }
 
-
-
-    &__lastname {
-        position: relative;
-
-       &::after {
-            content: "*";
-            position: absolute;
-            left: 45px;
-            color: var(--color-secondary);
-        }
-    }
-
-    &__name {
-        position: relative;
-
-       &::after {
-            content: "*";
-            position: absolute;
-            left: 22px;
-            color: var(--color-secondary);
-        }
-    }
 
 
 
@@ -151,11 +100,16 @@
 
 
 
-        &--open {
+        &.open {
             display: flex;
             flex-direction: column;
             gap: 25px;
             padding: 25px 30px;
+
+
+            .contact {
+                display: block;
+            }
         }
     }
 
@@ -171,80 +125,6 @@
 
         & button:first-child {
             margin-bottom: 5px;
-        }
-    }
-
-
-
-    &__contact {
-        display: flex;
-        border: 1px solid #C8C5D1;
-
-
-
-        & svg {
-            margin-left: 40px;
-        }
-    }
-
-
-
-    &__input {
-        width: 244px;
-        padding: 8px 11px;
-        font-size: 14px;
-        line-height: 19px;
-        border: none;
-        color: var(--color-primary);
-
-        &:focus-visible {
-            outline: none;
-        }
-    }
-    
-
-
-    &__contacts {
-        position: relative;
-        padding: 10px;
-        font-size: 12px;
-        line-height: 16px;
-        background-color: #E7E5EB;
-        border-right: 1px solid #C8C5D1;
-
-    }
-
-
-
-    &__select {
-        position: absolute;
-        display: grid;
-        padding: 10px 12px;
-        height: 115px;
-        width: 98px;
-        border: 1px solid #C8C5D1;
-        background-color: #F4F3F6;
-        z-index: 0;
-        opacity: 0;
-        visibility: hidden;
-
-
-
-        &.open {
-            left: 30px;
-            bottom: 50px;
-            visibility: visible;
-            opacity: 1;
-            z-index: 15;
-        }
-
-
-
-        & button {
-            text-align: start;
-            color: #333333;
-            font-size: 12px;
-            line-height: 17px;
         }
     }
 }

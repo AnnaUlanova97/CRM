@@ -94,12 +94,6 @@ function svgCreate(id, classIcon = "") {
   </svg>`;
 }
 
-
-
-
-
-
-
 // =========================================================
 
 // Функция рендера страницы
@@ -160,7 +154,6 @@ function renderClient(client) {
 
 renderClient(client);
 
-
 // Открытие модалки
 document.body.addEventListener("click", (e) => {
   const btn = e.target.closest(".js-btn-modal-open");
@@ -178,3 +171,15 @@ document.body.addEventListener("click", (e) => {
 
 // Отдельный слушатель для закрытия
 
+// Слушатель для кнопки селекта контактов
+
+document.querySelector(".contact__wrap").addEventListener("click", (e) => {
+  document.querySelector(".contact__select").classList.toggle("open");
+  document.querySelector(".contact__dropdown").classList.toggle("open");
+});
+
+document.querySelectorAll(".js-contact-btn").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    document.querySelector(".contact__btn").textContent = btn.textContent;
+  });
+});
