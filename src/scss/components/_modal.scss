@@ -108,7 +108,8 @@
 
 
             .contact {
-                display: block;
+                display: flex;
+                align-items: stretch;
             }
         }
     }
@@ -126,5 +127,13 @@
         & button:first-child {
             margin-bottom: 5px;
         }
+    }
+
+
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
 }

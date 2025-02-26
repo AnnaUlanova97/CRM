@@ -83,11 +83,6 @@ let client = {
   ],
 };
 
-// phone: "",
-// vk: "",
-// fb: "",
-// mail: "",
-
 function svgCreate(id, classIcon = "") {
   return `<svg class="icon ${classIcon}">
   <use xlink:href="#${id}"></use>
@@ -169,17 +164,102 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
+// Слушатель для добавления нового селекта
+document.querySelector(".modal__btn").addEventListener("click", () => {
+  getSelect();
+  document.querySelector(".modal__add").classList.add("open");
+});
+
+// События селекта
+document.querySelector(".modal__inner").addEventListener("click", (e) => {
+  // Открытие/закрытие селекта
+  const wrap = e.target.closest(".contact__wrap");
+  if (wrap) {
+    const parent = wrap.closest(".contact");
+    parent.querySelector(".contact__select").classList.toggle("open");
+    parent.querySelector(".contact__dropdown").classList.toggle("open");
+  }
+  // Выбор пункта в селекте
+  if (e.target.classList.contains("js-contact-btn")) {
+    const parent = e.target.closest(".contact");
+    const contactBtn = parent.querySelector(".contact__btn");
+    const input = parent.querySelector(".js-contact-input");
+
+    contactBtn.textContent = e.target.textContent;
+
+    if (e.target.textContent === "Email") {
+      input.setAttribute("type", "email");
+      input.setAttribute("max-length", "30");
+    } else if (e.target.textContent === "Доп. телефон") {
+      input.setAttribute("type", "tel");
+      input.setAttribute("max-length", "16");
+    } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
+      input.setAttribute("type", "url");
+      input.setAttribute("max-length", "30");
+    }
+  }
+});
+
 // Отдельный слушатель для закрытия
 
-// Слушатель для кнопки селекта контактов
+// Функция создания селекта
+function getSelect() {
+  const CONTACT = document.createElement("div");
+  const CONTACT_WRAP = document.createElement("div");
+  const CONTACT_DD = document.createElement("div");
+  const CONTACT_BTN = document.createElement("button");
+  const CONTACT_SELECT = document.createElement("div");
+  const CONTACT_BTN_FB = document.createElement("button");
+  const CONTACT_BTN_ADD_TEL = document.createElement("button");
+  const CONTACT_BTN_EMAIL = document.createElement("button");
+  const CONTACT_BTN_VK = document.createElement("button");
+  const INPUT = document.createElement("input");
+  const BTN_DELETE = document.createElement("div");
+  const BUTTONS = [
+    CONTACT_BTN_ADD_TEL,
+    CONTACT_BTN_EMAIL,
+    CONTACT_BTN_FB,
+    CONTACT_BTN_VK,
+  ];
 
-document.querySelector(".contact__wrap").addEventListener("click", (e) => {
-  document.querySelector(".contact__select").classList.toggle("open");
-  document.querySelector(".contact__dropdown").classList.toggle("open");
-});
+  CONTACT.classList.add("contact");
+  CONTACT_WRAP.classList.add("contact__wrap");
+  CONTACT_DD.classList.add("contact__dropdown");
+  CONTACT_BTN.classList.add("contact__btn");
+  CONTACT_SELECT.classList.add("contact__select");
+  BUTTONS.forEach((i) => i.classList.add("js-contact-btn"));
+  INPUT.classList.add("contact__input", "js-contact-input");
+  BTN_DELETE.classList.add("contact__delete");
 
-document.querySelectorAll(".js-contact-btn").forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    document.querySelector(".contact__btn").textContent = btn.textContent;
-  });
-});
+  CONTACT_BTN.textContent = "Телефон";
+  CONTACT_BTN_ADD_TEL.textContent = "Доп. телефон";
+  CONTACT_BTN_EMAIL.textContent = "Email";
+  CONTACT_BTN_VK.textContent = "Vk";
+  CONTACT_BTN_FB.textContent = "Facebook";
+  INPUT.setAttribute("placeholder", "Введите данные контакта");
+
+  CONTACT_DD.append(CONTACT_BTN);
+  CONTACT_DD.insertAdjacentHTML(
+    "beforeend",
+    svgCreate("arrow_back", "modal-arrow")
+  );
+  BTN_DELETE.innerHTML = `${svgCreate("contact-cancel", "contact-cancel")}`;
+  CONTACT.append(CONTACT_WRAP, INPUT, BTN_DELETE);
+  CONTACT_WRAP.append(CONTACT_DD, CONTACT_SELECT);
+  CONTACT_SELECT.append(
+    CONTACT_BTN_ADD_TEL,
+    CONTACT_BTN_EMAIL,
+    CONTACT_BTN_FB,
+    CONTACT_BTN_VK
+  );
+
+  INPUT.oninput = function () {
+    if (INPUT.textContent.length < 1) {
+      document.querySelector(".contact__delete").style.display = "flex";
+    }
+
+    console.log(document.querySelector(".contact__input").value.length);
+  };
+
+  document.querySelector(".modal__inner").append(CONTACT);
+}

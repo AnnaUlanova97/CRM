@@ -16,8 +16,8 @@ mixin modal
                         div.input
                             p Отчество
                             input(type="text")
-                div.modal__add.open
-                    +contact
+                div.modal__add
+                    div.modal__inner
                     button.modal__btn Добавить контакт
                         +svg-icon('add_circle_outline', 'add-icon')
                 div.modal__actions

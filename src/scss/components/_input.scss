@@ -54,7 +54,7 @@
 
 
     &__input {
-        width: 244px;
+        width: 100%;
         padding: 8px 11px;
         font-size: 14px;
         line-height: 19px;
@@ -106,7 +106,8 @@
         align-items: center;
         justify-content: space-between;
         width: 101px;
-        padding: 10px 12px;
+        height: 100%;
+        padding: 0 12px;
         font-size: 12px;
         line-height: 16px;
         background-color: #E7E5EB;
@@ -119,6 +120,19 @@
             transform: rotate(180deg);
         }
     }
+
+
+
+    &__delete {
+        display: none;
+        align-items: center;
+        padding: 7px;
+        border-left: 1px solid #C8C5D1;
+        background-color: #E7E5EB;
+        cursor: pointer;
+    }
+
+    
 
 }
 
