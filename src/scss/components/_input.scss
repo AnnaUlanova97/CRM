@@ -127,9 +127,22 @@
         display: none;
         align-items: center;
         padding: 7px;
-        border-left: 1px solid #C8C5D1;
+        outline: 1px solid #C8C5D1;
         background-color: #E7E5EB;
         cursor: pointer;
+        transition: .3s linear;
+
+        & svg {
+            transition: .3s linear;
+        }
+
+        &:hover {
+            outline: 1px solid var(--color-error);
+        }
+
+        &:hover svg {
+            fill: var(--color-error);
+        }
     }
 
     

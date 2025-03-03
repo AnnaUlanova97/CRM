@@ -149,10 +149,11 @@ function renderClient(client) {
 
 renderClient(client);
 
-// Открытие модалки
+// Открытие модалки и закрытие
 document.body.addEventListener("click", (e) => {
   const btn = e.target.closest(".js-btn-modal-open");
   const closeBtn = e.target.closest(".js-modal-close");
+  const modal = e.target.closest(".modal");
 
   if (btn) {
     let id = btn.dataset.modal;
@@ -162,11 +163,22 @@ document.body.addEventListener("click", (e) => {
   if (closeBtn) {
     closeBtn.closest(".modal").classList.remove("open");
   }
+
+  if (modal && e.target === modal) {
+    modal.classList.remove("open");
+  }
 });
 
-// Слушатель для добавления нового селекта
-document.querySelector(".modal__btn").addEventListener("click", () => {
+// Слушатель для добавления нового контакта
+document.querySelector(".modal__btn").addEventListener("click", (e) => {
   getSelect();
+  const arr = [...document.querySelectorAll(".js-contact-input")];
+
+  if (arr.length >= 10) {
+    e.target.style.display = "none";
+  }
+  console.log(arr);
+
   document.querySelector(".modal__add").classList.add("open");
 });
 
@@ -237,6 +249,7 @@ function getSelect() {
   CONTACT_BTN_VK.textContent = "Vk";
   CONTACT_BTN_FB.textContent = "Facebook";
   INPUT.setAttribute("placeholder", "Введите данные контакта");
+  INPUT.setAttribute("type", "tel");
 
   CONTACT_DD.append(CONTACT_BTN);
   CONTACT_DD.insertAdjacentHTML(
@@ -244,6 +257,7 @@ function getSelect() {
     svgCreate("arrow_back", "modal-arrow")
   );
   BTN_DELETE.innerHTML = `${svgCreate("contact-cancel", "contact-cancel")}`;
+
   CONTACT.append(CONTACT_WRAP, INPUT, BTN_DELETE);
   CONTACT_WRAP.append(CONTACT_DD, CONTACT_SELECT);
   CONTACT_SELECT.append(
@@ -253,13 +267,18 @@ function getSelect() {
     CONTACT_BTN_VK
   );
 
-  INPUT.oninput = function () {
-    if (INPUT.textContent.length < 1) {
-      document.querySelector(".contact__delete").style.display = "flex";
+  // Появление кнопки удалить, при вводе символов в инпут
+  INPUT.oninput = function (e) {
+    if (INPUT.value.length > 1) {
+      BTN_DELETE.style.display = "flex";
+    } else {
+      BTN_DELETE.style.display = "none";
     }
-
-    console.log(document.querySelector(".contact__input").value.length);
   };
+
+  BTN_DELETE.addEventListener("click", (e) => {
+    INPUT.value = "";
+  });
 
   document.querySelector(".modal__inner").append(CONTACT);
 }
