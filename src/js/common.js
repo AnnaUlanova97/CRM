@@ -151,6 +151,9 @@ renderClient(client);
 
 // Открытие модалки и закрытие
 document.body.addEventListener("click", (e) => {
+  if(e.target.classList.contains("js-btn-modal-toggle")) {
+    //  Логика открытия модалки
+  }
   const btn = e.target.closest(".js-btn-modal-open");
   const closeBtn = e.target.closest(".js-modal-close");
   const modal = e.target.closest(".modal");
@@ -169,9 +172,12 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
+
 // Слушатель для добавления нового контакта
+// Использовать js всегда где у тебя слушатель весится на нее
 document.querySelector(".modal__btn").addEventListener("click", (e) => {
-  getSelect();
+  document.querySelector(".modal__inner").append(getSelect());
+
   const arr = [...document.querySelectorAll(".js-contact-input")];
 
   if (arr.length >= 10) {
@@ -227,6 +233,7 @@ function getSelect() {
   const CONTACT_BTN_VK = document.createElement("button");
   const INPUT = document.createElement("input");
   const BTN_DELETE = document.createElement("div");
+
   const BUTTONS = [
     CONTACT_BTN_ADD_TEL,
     CONTACT_BTN_EMAIL,
@@ -280,5 +287,5 @@ function getSelect() {
     INPUT.value = "";
   });
 
-  document.querySelector(".modal__inner").append(CONTACT);
+  return CONTACT
 }
