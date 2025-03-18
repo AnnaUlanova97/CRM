@@ -9,19 +9,19 @@ mixin modal
                     form(action="").modal__form
                         div.input.input--required
                             p Фамилия
-                            input(type="text" required)
+                            input(type="text" required).input__surname
                         div.input.input--required 
                             p Имя
-                            input(type="text" required)
+                            input(type="text" required).input__name
                         div.input
                             p Отчество
-                            input(type="text")
+                            input(type="text").input__lastname
                 div.modal__add
-                    div.modal__inner
-                    button.modal__btn Добавить контакт
+                    div.modal__inner.js-modal__inner
+                    button.modal__btn.js-modal__btn Добавить контакт
                         +svg-icon('add_circle_outline', 'add-icon')
                 div.modal__actions
-                    button.btn__save Сохранить
+                    button.btn__save.js-btn__save Сохранить
                     button.btn__delete Удалить клиента
 
 

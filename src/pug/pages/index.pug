@@ -10,9 +10,9 @@ block vars
 block content
     main.main.container.clients
         h1.clients__title Клиенты
-        div.clients__content
-            div.clients__filters 
-                div.clients__table
+        div.clients__wrap
+            div.clients__table
+                div.clients__filters
                     button.clients__headline ID
                         +svg-icon('arrow_downward', 'clients__icon')
                     button.clients__headline Фамилия Имя Отчество 
@@ -23,8 +23,8 @@ block content
                         +svg-icon('arrow_downward', 'clients__icon')
                     button.clients__headline Контакты
                     button.clients__headline Действия
-                div.clients__wrap 
-                    ul.clients__inner.clients__table
+                div.clients__content
+                    ul.clients__inner.clients__filters
                         li.clients__item  111112
                         li.clients__item Скворцов Денис Юрьевич
                         li.clients__item 21.02.2021 
@@ -41,14 +41,14 @@ block content
                             button 
                                 +svg-icon('phone', 'table-icon')
                             button 
-                                +svg-icon('ellipse', 'table-icon_ellipse')
+                                +svg-icon('ellipse', 'table-icon--ellipse')
                         li.clients__item
-                            button.clients__btn.clients__btn--change Изменить
+                            button.btn-svg.btn-svg--purple Изменить
                                 +svg-icon('actions', 'table-icon')
-                            button.clients__btn.clients__btn--cancel Удалить
+                            button.btn-svg.btn-svg--red Удалить
                                 +svg-icon('cancel', 'table-icon_cancel')
                 //- +svg-icon('frame', 'clients__frame')
-            button.clients__add.js-btn-modal-open(data-modal='modal-open')
+            button.btn-secondary.js-btn-modal-open(data-modal='modal-open')
                 +svg-icon('btn-add', 'clients__svg')
                 span Добавить клиента
     +modal

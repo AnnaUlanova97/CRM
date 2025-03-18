@@ -39,17 +39,20 @@
 }
 
 
-//Разобраться
+// Разобраться ????
 .contact {
     display: none;
     border: 1px solid #C8C5D1;
 
 
 
-    &__wrap {
+    &__content {
         position: relative;
-        display: inline-block;
     }
+    // &__wrap {
+    //     position: relative;
+    //     display: inline-block;
+    // }
 
 
 
@@ -105,7 +108,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        width: 101px;
+        width: 105px;
         height: 100%;
         padding: 0 12px;
         font-size: 12px;

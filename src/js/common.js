@@ -93,7 +93,7 @@ function svgCreate(id, classIcon = "") {
 
 // Функция рендера страницы
 function renderClient(client) {
-  const CLIENT_WRAP = document.querySelector(".clients__wrap");
+  const CLIENT_CONTENT = document.querySelector(".clients__content");
   const CLIENT = document.createElement("ul");
   const ID = document.createElement("li");
   const NAME = document.createElement("li");
@@ -119,41 +119,37 @@ function renderClient(client) {
 
   if (fbClient) {
     CONTACTS.innerHTML = `${svgCreate("fb", "table-icon")}`;
-  } else {
-    console.log("error");
   }
 
   if (otherClient) {
     CONTACTS.innerHTML = `${svgCreate("vk", "table-icon")}`;
-  } else {
-    console.log("error");
   }
 
-  CLIENT.classList.add("clients__inner", "clients__table");
+  CLIENT.classList.add("clients__inner", "clients__filters");
   itemsArr.forEach((i) => i.classList.add("clients__item"));
-  BTN_CHANGES.classList.add("clients__btn", "clients__btn--change");
-  BTN_CANCEL.classList.add("clients__btn", "clients__btn--cancel");
+  BTN_CHANGES.classList.add("btn-svg", "btn-svg--purple");
+  BTN_CANCEL.classList.add("btn-svg", "btn-svg--red");
 
   BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
-  BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon_cancel")}`;
+  BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
 
-  CLIENT_WRAP.append(CLIENT);
+  CLIENT_CONTENT.append(CLIENT);
   itemsArr.forEach((i) => CLIENT.append(i));
   CHANGES.append(BTN_CHANGES, BTN_CANCEL);
   BTN_CANCEL.append.createElement;
 
   NAME.textContent =
     client.surname + " " + client.name + " " + client.middleName;
-  console.log(client.contacts);
 }
 
 renderClient(client);
 
-// Открытие модалки и закрытие
+// Открытие модалки
 document.body.addEventListener("click", (e) => {
-  if(e.target.classList.contains("js-btn-modal-toggle")) {
-    //  Логика открытия модалки
-  }
+  // if (e.target.classList.closest("js-btn-modal-toggle")) {
+  //   let id = e.target.dataset.modal;
+  //   document.getElementById(id).classList.add("open");
+  // } Твоим способом НЕ ПОЛУЧАЕТСЯ
   const btn = e.target.closest(".js-btn-modal-open");
   const closeBtn = e.target.closest(".js-modal-close");
   const modal = e.target.closest(".modal");
@@ -172,10 +168,11 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
+// Закрытие модалки
+document.body.addEventListener("click", (e) => {});
 
-// Слушатель для добавления нового контакта
-// Использовать js всегда где у тебя слушатель весится на нее
-document.querySelector(".modal__btn").addEventListener("click", (e) => {
+// Слушатель для добавления еще одного контакта
+document.querySelector(".js-modal__btn").addEventListener("click", (e) => {
   document.querySelector(".modal__inner").append(getSelect());
 
   const arr = [...document.querySelectorAll(".js-contact-input")];
@@ -183,17 +180,16 @@ document.querySelector(".modal__btn").addEventListener("click", (e) => {
   if (arr.length >= 10) {
     e.target.style.display = "none";
   }
-  console.log(arr);
 
   document.querySelector(".modal__add").classList.add("open");
 });
 
 // События селекта
-document.querySelector(".modal__inner").addEventListener("click", (e) => {
+document.querySelector(".js-modal__inner").addEventListener("click", (e) => {
   // Открытие/закрытие селекта
-  const wrap = e.target.closest(".contact__wrap");
-  if (wrap) {
-    const parent = wrap.closest(".contact");
+  const content = e.target.closest(".contact__content");
+  if (content) {
+    const parent = content.closest(".contact");
     parent.querySelector(".contact__select").classList.toggle("open");
     parent.querySelector(".contact__dropdown").classList.toggle("open");
   }
@@ -223,27 +219,27 @@ document.querySelector(".modal__inner").addEventListener("click", (e) => {
 // Функция создания селекта
 function getSelect() {
   const CONTACT = document.createElement("div");
-  const CONTACT_WRAP = document.createElement("div");
-  const CONTACT_DD = document.createElement("div");
+  const CONTACT_CONTENT = document.createElement("div");
+  const CONTACT_DROPDOWN = document.createElement("div");
   const CONTACT_BTN = document.createElement("button");
   const CONTACT_SELECT = document.createElement("div");
   const CONTACT_BTN_FB = document.createElement("button");
-  const CONTACT_BTN_ADD_TEL = document.createElement("button");
+  const CONTACT_BTN_TEL2 = document.createElement("button");
   const CONTACT_BTN_EMAIL = document.createElement("button");
   const CONTACT_BTN_VK = document.createElement("button");
   const INPUT = document.createElement("input");
   const BTN_DELETE = document.createElement("div");
 
   const BUTTONS = [
-    CONTACT_BTN_ADD_TEL,
+    CONTACT_BTN_TEL2,
     CONTACT_BTN_EMAIL,
     CONTACT_BTN_FB,
     CONTACT_BTN_VK,
   ];
 
   CONTACT.classList.add("contact");
-  CONTACT_WRAP.classList.add("contact__wrap");
-  CONTACT_DD.classList.add("contact__dropdown");
+  CONTACT_CONTENT.classList.add("contact__content");
+  CONTACT_DROPDOWN.classList.add("contact__dropdown");
   CONTACT_BTN.classList.add("contact__btn");
   CONTACT_SELECT.classList.add("contact__select");
   BUTTONS.forEach((i) => i.classList.add("js-contact-btn"));
@@ -251,24 +247,24 @@ function getSelect() {
   BTN_DELETE.classList.add("contact__delete");
 
   CONTACT_BTN.textContent = "Телефон";
-  CONTACT_BTN_ADD_TEL.textContent = "Доп. телефон";
+  CONTACT_BTN_TEL2.textContent = "Доп. телефон";
   CONTACT_BTN_EMAIL.textContent = "Email";
   CONTACT_BTN_VK.textContent = "Vk";
   CONTACT_BTN_FB.textContent = "Facebook";
   INPUT.setAttribute("placeholder", "Введите данные контакта");
   INPUT.setAttribute("type", "tel");
 
-  CONTACT_DD.append(CONTACT_BTN);
-  CONTACT_DD.insertAdjacentHTML(
+  CONTACT_DROPDOWN.append(CONTACT_BTN);
+  CONTACT_DROPDOWN.insertAdjacentHTML(
     "beforeend",
     svgCreate("arrow_back", "modal-arrow")
   );
   BTN_DELETE.innerHTML = `${svgCreate("contact-cancel", "contact-cancel")}`;
 
-  CONTACT.append(CONTACT_WRAP, INPUT, BTN_DELETE);
-  CONTACT_WRAP.append(CONTACT_DD, CONTACT_SELECT);
+  CONTACT.append(CONTACT_CONTENT, INPUT, BTN_DELETE);
+  CONTACT_CONTENT.append(CONTACT_DROPDOWN, CONTACT_SELECT);
   CONTACT_SELECT.append(
-    CONTACT_BTN_ADD_TEL,
+    CONTACT_BTN_TEL2,
     CONTACT_BTN_EMAIL,
     CONTACT_BTN_FB,
     CONTACT_BTN_VK
@@ -287,5 +283,104 @@ function getSelect() {
     INPUT.value = "";
   });
 
-  return CONTACT
+  return CONTACT;
 }
+
+// Функция слушателя на добавление нового клиента в таблицу
+document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
+  const name = document.querySelector(".input__name");
+  const surname = document.querySelector(".input__surname");
+  const lastname = document.querySelector(".input__lastname");
+  const input = document.querySelectorAll(".js-contact-input");
+  const inputBtn = document.querySelector(".contact__btn");
+
+  if (inputBtn.textContent === "Телефон") {
+    const value = input.value;
+  }
+
+  console.log(document.querySelector(".contact__btn").textContent);
+
+  const response = await fetch("http://localhost:3000/api/clients", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      // * обязательное поле, имя клиента
+      name: name.value,
+      // * обязательное поле, фамилия клиента
+      surname: surname.value,
+      // необязательное поле, отчество клиента
+      lastName: lastname.value,
+      // контакты - необязательное поле, массив контактов
+      // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
+      contacts: [
+        {
+          type: inputBtn.textContent,
+          value: input.value,
+        },
+      ],
+    }),
+  });
+  const data = await response.json();
+
+  if (response.status === 201) {
+    document.querySelectorAll(".contact").forEach((el) => el.remove());
+    document.querySelector(".modal__add").classList.remove("open");
+    document.getElementById("modal-open").classList.remove("open");
+
+    name.value = "";
+    surname.value = "";
+    lastname.value = "";
+    input.value = "";
+    renderClient(client);
+  }
+});
+
+// Функция удаления клиента из таблицы
+document.querySelector(".");
+
+// async function name() {
+//   const response = await fetch("http://localhost:3000/api/clients");
+//   const data = await response.json();
+//   console.log(data);
+// }
+// name();
+
+// async function createContact() {
+//   const response = await fetch("http://localhost:3000/api/clients", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({
+//       // ID клиента, заполняется сервером автоматически, после создания нельзя изменить
+//       id: "1234567890",
+//       // дата и время создания клиента, заполняется сервером автоматически, после создания нельзя изменить
+//       createdAt: "2021-02-03T13:07:29.554Z",
+//       // дата и время изменения клиента, заполняется сервером автоматически при изменении клиента
+//       updatedAt: "2021-02-03T13:07:29.554Z",
+//       // * обязательное поле, имя клиента
+//       name: "Василий",
+//       // * обязательное поле, фамилия клиента
+//       surname: "Пупкин",
+//       // необязательное поле, отчество клиента
+//       lastName: "Васильевич",
+//       // контакты - необязательное поле, массив контактов
+//       // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
+//       contacts: [
+//         {
+//           type: "Телефон",
+//           value: "+71234567890",
+//         },
+//         {
+//           type: "Email",
+//           value: "abc@xyz.com",
+//         },
+//         {
+//           type: "Facebook",
+//           value: "https://facebook.com/vasiliy-pupkin-the-best",
+//         },
+//       ],
+//     }),
+//   });
+//   const data = await response.json();
+//   console.log(data);
+// }
+// createContact();

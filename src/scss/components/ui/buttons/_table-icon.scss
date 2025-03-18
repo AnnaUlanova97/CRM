@@ -1,0 +1,12 @@
+.table-icon {
+    width: 16px;
+    height: 16px;
+    fill: var(--color-secondary);
+  
+    
+    
+    &--ellipse {
+        fill: none;
+        stroke: var(--color-secondary);
+    }
+  }

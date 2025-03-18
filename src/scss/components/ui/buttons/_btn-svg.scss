@@ -1,0 +1,39 @@
+.btn-svg {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;    
+    gap: 2px;
+    font-size: 14px;
+    line-height: 100%;
+    color: var(--color-black);
+    background-color: #ffffff;
+    transition: .3s linear;
+  
+  
+  
+    &--red {
+      fill: var(--color-error);
+  
+      & svg {
+        fill: var(--color-error);
+      }
+  
+      &:hover {
+        color: var(--color-error);
+      }
+  
+      &:active {
+        color: var(--color-error);
+      }
+    }
+    &--purple {
+      fill: var(--color-secondary);
+      &:hover {
+        color: var(--color-secondary);
+      }
+  
+      &:active {
+        color: var(--color-secondary);
+      }
+    }
+  }
