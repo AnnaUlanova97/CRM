@@ -59,29 +59,29 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 //
 
-let client = {
-  surname: "Скворцов",
-  name: "Денис",
-  middleName: "Юрьевич",
-  contacts: [
-    {
-      connection: "phone",
-      value: "88888888888",
-    },
-    {
-      connection: "mail",
-      value: "ddddd",
-    },
-    {
-      connection: "fb",
-      value: "ddfrre",
-    },
-    {
-      connection: "vk",
-      value: "aavff",
-    },
-  ],
-};
+// let client = {
+//   surname: "Скворцов",
+//   name: "Денис",
+//   middleName: "Юрьевич",
+//   contacts: [
+//     {
+//       connection: "phone",
+//       value: "88888888888",
+//     },
+//     {
+//       connection: "mail",
+//       value: "ddddd",
+//     },
+//     {
+//       connection: "fb",
+//       value: "ddfrre",
+//     },
+//     {
+//       connection: "vk",
+//       value: "aavff",
+//     },
+//   ],
+// };
 
 function svgCreate(id, classIcon = "") {
   return `<svg class="icon ${classIcon}">
@@ -90,9 +90,20 @@ function svgCreate(id, classIcon = "") {
 }
 
 // =========================================================
+async function getClientsList() {
+  return fetch("http://localhost:3000/api/clients", {})
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((data) => {
+      return data;
+    });
+}
+// console.log(await getClientsList());
 
 // Функция рендера страницы
-function renderClient(client) {
+async function renderClients(arr) {
   const CLIENT_CONTENT = document.querySelector(".clients__content");
   const CLIENT = document.createElement("ul");
   const ID = document.createElement("li");
@@ -105,25 +116,25 @@ function renderClient(client) {
   const BTN_CANCEL = document.createElement("button");
   const itemsArr = [ID, NAME, DATE_CHANGE, DATE_CREATION, CONTACTS, CHANGES];
 
-  let phoneClient = client.contacts.find(
-    (contact) => contact.connection === "phone"
-  );
-  let mailClient = client.contacts.find(
-    (contact) => contact.connection === "mail"
-  );
-  let fbClient = client.contacts.find((contact) => contact.connection === "fb");
-  let vkClient = client.contacts.find((contact) => contact.connection === "vk");
-  let otherClient = client.contacts.find(
-    (contact) => contact.connection === "other"
-  );
+  // let phoneClient = client.contacts.find(
+  //   (contact) => contact.connection === "phone"
+  // );
+  // let mailClient = client.contacts.find(
+  //   (contact) => contact.connection === "mail"
+  // );
+  // let fbClient = client.contacts.find((contact) => contact.connection === "fb");
+  // let vkClient = client.contacts.find((contact) => contact.connection === "vk");
+  // let otherClient = client.contacts.find(
+  //   (contact) => contact.connection === "other"
+  // );
 
-  if (fbClient) {
-    CONTACTS.innerHTML = `${svgCreate("fb", "table-icon")}`;
-  }
+  // if (fbClient) {
+  //   CONTACTS.innerHTML = `${svgCreate("fb", "table-icon")}`;
+  // }
 
-  if (otherClient) {
-    CONTACTS.innerHTML = `${svgCreate("vk", "table-icon")}`;
-  }
+  // if (otherClient) {
+  //   CONTACTS.innerHTML = `${svgCreate("vk", "table-icon")}`;
+  // }
 
   CLIENT.classList.add("clients__inner", "clients__filters");
   itemsArr.forEach((i) => i.classList.add("clients__item"));
@@ -133,16 +144,19 @@ function renderClient(client) {
   BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
   BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
 
-  CLIENT_CONTENT.append(CLIENT);
-  itemsArr.forEach((i) => CLIENT.append(i));
-  CHANGES.append(BTN_CHANGES, BTN_CANCEL);
-  BTN_CANCEL.append.createElement;
-
-  NAME.textContent =
-    client.surname + " " + client.name + " " + client.middleName;
+  // const arr = await getClientsList();
+  arr.forEach((client) => {
+    NAME.textContent =
+      client.surname + " " + client.name + " " + client.lastName;
+    console.log(client);
+    CLIENT_CONTENT.append(CLIENT);
+    itemsArr.forEach((i) => CLIENT.append(i));
+    CHANGES.append(BTN_CHANGES, BTN_CANCEL);
+    BTN_CANCEL.append.createElement;
+  });
 }
 
-renderClient(client);
+renderClients(await getClientsList());
 
 // Открытие модалки
 document.body.addEventListener("click", (e) => {
@@ -309,7 +323,7 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
       // * обязательное поле, фамилия клиента
       surname: surname.value,
       // необязательное поле, отчество клиента
-      lastName: lastname.value,
+      lastname: lastname.value,
       // контакты - необязательное поле, массив контактов
       // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
       contacts: [
@@ -336,7 +350,7 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
 });
 
 // Функция удаления клиента из таблицы
-document.querySelector(".");
+// document.querySelector(".");
 
 // async function name() {
 //   const response = await fetch("http://localhost:3000/api/clients");
