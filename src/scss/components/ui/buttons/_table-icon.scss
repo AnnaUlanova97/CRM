@@ -1,12 +1,22 @@
 .table-icon {
+    position: relative;
     width: 16px;
     height: 16px;
     fill: var(--color-secondary);
+    cursor: pointer;
   
     
     
     &--ellipse {
-        fill: none;
-        stroke: var(--color-secondary);
+        position: relative;
+    }
+
+    &--number {
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        font-size: 10px;
+        line-height: 100%;
+        font-weight: 600;
     }
   }

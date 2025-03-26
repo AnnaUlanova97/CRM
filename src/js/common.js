@@ -93,70 +93,136 @@ function svgCreate(id, classIcon = "") {
 async function getClientsList() {
   return fetch("http://localhost:3000/api/clients", {})
     .then((response) => {
-      console.log(response);
       return response.json();
     })
     .then((data) => {
       return data;
     });
 }
-// console.log(await getClientsList());
 
 // Функция рендера страницы
-async function renderClients(arr) {
+async function renderClients(clientsList) {
   const CLIENT_CONTENT = document.querySelector(".clients__content");
-  const CLIENT = document.createElement("ul");
-  const ID = document.createElement("li");
-  const NAME = document.createElement("li");
-  const DATE_CREATION = document.createElement("li");
-  const DATE_CHANGE = document.createElement("li");
-  const CONTACTS = document.createElement("li");
-  const CHANGES = document.createElement("li");
-  const BTN_CHANGES = document.createElement("button");
-  const BTN_CANCEL = document.createElement("button");
-  const itemsArr = [ID, NAME, DATE_CHANGE, DATE_CREATION, CONTACTS, CHANGES];
 
-  // let phoneClient = client.contacts.find(
-  //   (contact) => contact.connection === "phone"
-  // );
-  // let mailClient = client.contacts.find(
-  //   (contact) => contact.connection === "mail"
-  // );
-  // let fbClient = client.contacts.find((contact) => contact.connection === "fb");
-  // let vkClient = client.contacts.find((contact) => contact.connection === "vk");
-  // let otherClient = client.contacts.find(
-  //   (contact) => contact.connection === "other"
-  // );
+  clientsList.forEach((client) => {
+    const CLIENT = document.createElement("ul");
+    const NAME = document.createElement("li");
+    const ID = document.createElement("li");
+    const DATE_CREATION = document.createElement("li");
+    const DATE_CHANGE = document.createElement("li");
+    const CONTACTS = document.createElement("li");
+    const CHANGES = document.createElement("li");
+    const BTN_CHANGES = document.createElement("button");
+    const BTN_CANCEL = document.createElement("button");
+    const itemsArr = [ID, NAME, DATE_CHANGE, DATE_CREATION, CONTACTS, CHANGES];
+    const TIME_CREATION = document.createElement("span");
+    const TIME_CHANGE = document.createElement("span");
 
-  // if (fbClient) {
-  //   CONTACTS.innerHTML = `${svgCreate("fb", "table-icon")}`;
-  // }
+    const formatDate1 = (dateStr) => {
+      const date = new Date(dateStr);
 
-  // if (otherClient) {
-  //   CONTACTS.innerHTML = `${svgCreate("vk", "table-icon")}`;
-  // }
+      return date.toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    };
 
-  CLIENT.classList.add("clients__inner", "clients__filters");
-  itemsArr.forEach((i) => i.classList.add("clients__item"));
-  BTN_CHANGES.classList.add("btn-svg", "btn-svg--purple");
-  BTN_CANCEL.classList.add("btn-svg", "btn-svg--red");
+    const formatDate2 = (dateStr) => {
+      const date2 = new Date(dateStr);
+      return date2.toLocaleString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
 
-  BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
-  BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
+    CLIENT.classList.add("clients__inner", "clients__filters");
+    itemsArr.forEach((i) => i.classList.add("clients__item"));
+    BTN_CHANGES.classList.add("btn-svg", "btn-svg--purple");
+    BTN_CANCEL.classList.add("btn-svg", "btn-svg--red");
+    TIME_CHANGE.classList.add("clients__time");
+    TIME_CREATION.classList.add("clients__time");
 
-  // const arr = await getClientsList();
-  arr.forEach((client) => {
+    BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
+    BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
     NAME.textContent =
       client.surname + " " + client.name + " " + client.lastName;
-    console.log(client);
-    CLIENT_CONTENT.append(CLIENT);
-    itemsArr.forEach((i) => CLIENT.append(i));
+    ID.textContent = client.id;
+
+    DATE_CREATION.textContent = formatDate1(client.createdAt);
+    TIME_CREATION.textContent = formatDate2(client.createdAt);
+    DATE_CHANGE.textContent = formatDate1(client.updatedAt);
+    TIME_CHANGE.textContent = formatDate2(client.updatedAt);
+
+    // CONTACTS
+
+    function createContactIcon(key) {
+      const BTN = document.createElement("span");
+
+      BTN.classList.add("popup__box");
+
+      BTN.innerHTML = `${svgCreate(key, "table-icon")}`;
+
+      return BTN;
+    }
+
+    const contactTypes = {
+      Facebook: "fb",
+      Email: "mail",
+      Телефон: "phone",
+      Vk: "vk",
+    };
+
+    const MAX_SVG = 4;
+    const SVG_TO_SHOW = client.contacts.slice(0, MAX_SVG);
+    const SVG_HIDDEN = client.contacts.length - MAX_SVG;
+
+    SVG_TO_SHOW.forEach((contact) => {
+      if (contactTypes[contact.type]) {
+        const ICON = createContactIcon(contactTypes[contact.type]);
+        const POPUP = document.createElement("div");
+        const POPUP_CONTENT = document.createElement("span");
+
+        POPUP.classList.add("popup");
+        POPUP_CONTENT.innerText = `${contact.type}: ${contact.value}`;
+
+        POPUP.append(POPUP_CONTENT);
+        ICON.append(POPUP);
+        CONTACTS.append(ICON);
+      }
+    });
+
+    if (SVG_HIDDEN > 0) {
+      const MORE_CONTACTS = document.createElement("span");
+      const NUMBER = document.createElement("span");
+      const BOX = document.createElement("span");
+
+      BOX.classList.add("table-icon--ellipse");
+      NUMBER.classList.add("table-icon--number");
+
+      MORE_CONTACTS.innerHTML = `${svgCreate("ellipse", "table-icon")}`;
+      NUMBER.textContent = `+${SVG_HIDDEN}`;
+
+      CONTACTS.append(BOX);
+      BOX.append(MORE_CONTACTS, NUMBER);
+    }
+
+    CLIENT.append(ID, NAME, DATE_CREATION, DATE_CHANGE, CONTACTS, CHANGES);
     CHANGES.append(BTN_CHANGES, BTN_CANCEL);
-    BTN_CANCEL.append.createElement;
+    DATE_CREATION.append(TIME_CREATION);
+    DATE_CHANGE.append(TIME_CHANGE);
+    CLIENT_CONTENT.append(CLIENT);
   });
 }
 
-renderClients(await getClientsList());
+async function init() {
+  const CLIENT_CONTENT = document.querySelector(".clients__content");
+  CLIENT_CONTENT.innerHTML = "";
+
+  const clients = await getClientsList();
+  renderClients(clients);
+}
+init();
 
 // Открытие модалки
 document.body.addEventListener("click", (e) => {
@@ -306,13 +372,19 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
   const surname = document.querySelector(".input__surname");
   const lastname = document.querySelector(".input__lastname");
   const input = document.querySelectorAll(".js-contact-input");
-  const inputBtn = document.querySelector(".contact__btn");
+  const contactBox = document.querySelectorAll(".contact");
 
-  if (inputBtn.textContent === "Телефон") {
-    const value = input.value;
-  }
+  // Создаем массив контактов
+  const contacts = [];
 
-  console.log(document.querySelector(".contact__btn").textContent);
+  contactBox.forEach((div) => {
+    const type = div.querySelector(".contact__btn").textContent.trim();
+    const value = div.querySelector(".js-contact-input").value.trim();
+
+    if (value) {
+      contacts.push({ type, value });
+    }
+  });
 
   const response = await fetch("http://localhost:3000/api/clients", {
     method: "POST",
@@ -323,15 +395,10 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
       // * обязательное поле, фамилия клиента
       surname: surname.value,
       // необязательное поле, отчество клиента
-      lastname: lastname.value,
+      lastName: lastname.value,
       // контакты - необязательное поле, массив контактов
       // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
-      contacts: [
-        {
-          type: inputBtn.textContent,
-          value: input.value,
-        },
-      ],
+      contacts: contacts,
     }),
   });
   const data = await response.json();
@@ -345,56 +412,8 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
     surname.value = "";
     lastname.value = "";
     input.value = "";
-    renderClient(client);
+    await init();
   }
 });
 
 // Функция удаления клиента из таблицы
-// document.querySelector(".");
-
-// async function name() {
-//   const response = await fetch("http://localhost:3000/api/clients");
-//   const data = await response.json();
-//   console.log(data);
-// }
-// name();
-
-// async function createContact() {
-//   const response = await fetch("http://localhost:3000/api/clients", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({
-//       // ID клиента, заполняется сервером автоматически, после создания нельзя изменить
-//       id: "1234567890",
-//       // дата и время создания клиента, заполняется сервером автоматически, после создания нельзя изменить
-//       createdAt: "2021-02-03T13:07:29.554Z",
-//       // дата и время изменения клиента, заполняется сервером автоматически при изменении клиента
-//       updatedAt: "2021-02-03T13:07:29.554Z",
-//       // * обязательное поле, имя клиента
-//       name: "Василий",
-//       // * обязательное поле, фамилия клиента
-//       surname: "Пупкин",
-//       // необязательное поле, отчество клиента
-//       lastName: "Васильевич",
-//       // контакты - необязательное поле, массив контактов
-//       // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
-//       contacts: [
-//         {
-//           type: "Телефон",
-//           value: "+71234567890",
-//         },
-//         {
-//           type: "Email",
-//           value: "abc@xyz.com",
-//         },
-//         {
-//           type: "Facebook",
-//           value: "https://facebook.com/vasiliy-pupkin-the-best",
-//         },
-//       ],
-//     }),
-//   });
-//   const data = await response.json();
-//   console.log(data);
-// }
-// createContact();

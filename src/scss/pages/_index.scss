@@ -47,7 +47,7 @@
 
     &__filters {
         display: grid;
-        grid-template-columns: minmax(63px, 82px) minmax(300px, 369px) minmax(100px, 175px) minmax(100px, 173px) minmax(100px, 160px) minmax(100px, 186px);
+        grid-template-columns:minmax(100px, 100px) minmax(200px, 370px) minmax(100px, 175px) minmax(100px, 173px) minmax(100px, 160px) minmax(100px, 186px);
         padding: 0 20px;
 
         @media (max-width: 1360px) {
