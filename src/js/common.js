@@ -137,14 +137,23 @@ async function renderClients(clientsList) {
     };
 
     CLIENT.classList.add("clients__inner", "clients__filters");
+    CLIENT.dataset.id = client.id;
     itemsArr.forEach((i) => i.classList.add("clients__item"));
+    CONTACTS.classList.add("js-clients__item");
     BTN_CHANGES.classList.add("btn-svg", "btn-svg--purple");
-    BTN_CANCEL.classList.add("btn-svg", "btn-svg--red");
+    BTN_CANCEL.classList.add(
+      "btn-svg",
+      "btn-svg--red",
+      "js-btn-modal-open",
+      "js-btn__delete"
+    );
+    BTN_CANCEL.dataset.modal = "modal-delete";
     TIME_CHANGE.classList.add("clients__time");
     TIME_CREATION.classList.add("clients__time");
 
     BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
     BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
+    BTN_CANCEL.dataset.id = client.id;
     NAME.textContent =
       client.surname + " " + client.name + " " + client.lastName;
     ID.textContent = client.id;
@@ -159,7 +168,7 @@ async function renderClients(clientsList) {
     function createContactIcon(key) {
       const BTN = document.createElement("span");
 
-      BTN.classList.add("popup__box");
+      BTN.classList.add("tooltip");
 
       BTN.innerHTML = `${svgCreate(key, "table-icon")}`;
 
@@ -174,20 +183,22 @@ async function renderClients(clientsList) {
     };
 
     const MAX_SVG = 4;
-    const SVG_TO_SHOW = client.contacts.slice(0, MAX_SVG);
+    // const SVG_TO_SHOW = client.contacts.slice(0, MAX_SVG);
     const SVG_HIDDEN = client.contacts.length - MAX_SVG;
+    const SVG_TO_SHOW = client.contacts;
 
     SVG_TO_SHOW.forEach((contact) => {
       if (contactTypes[contact.type]) {
         const ICON = createContactIcon(contactTypes[contact.type]);
-        const POPUP = document.createElement("div");
-        const POPUP_CONTENT = document.createElement("span");
+        const TOOLTIP = document.createElement("div");
+        const TOOLTIP_CONTENT = document.createElement("span");
 
-        POPUP.classList.add("popup");
-        POPUP_CONTENT.innerText = `${contact.type}: ${contact.value}`;
+        TOOLTIP.classList.add("tooltip__content");
+        // TOOLTIP_CONTENT.innerText = `${contact.type}: ${contact.value}`;
+        TOOLTIP_CONTENT.innerText = `${contact.value}`;
 
-        POPUP.append(POPUP_CONTENT);
-        ICON.append(POPUP);
+        TOOLTIP.append(TOOLTIP_CONTENT);
+        ICON.append(TOOLTIP);
         CONTACTS.append(ICON);
       }
     });
@@ -197,6 +208,7 @@ async function renderClients(clientsList) {
       const NUMBER = document.createElement("span");
       const BOX = document.createElement("span");
 
+      BOX.classList.add("table-icon");
       BOX.classList.add("table-icon--ellipse");
       NUMBER.classList.add("table-icon--number");
 
@@ -212,6 +224,13 @@ async function renderClients(clientsList) {
     DATE_CREATION.append(TIME_CREATION);
     DATE_CHANGE.append(TIME_CHANGE);
     CLIENT_CONTENT.append(CLIENT);
+  });
+
+  document.body.addEventListener("click", (e) => {
+    const clientItem = e.target.closest(".js-clients__item");
+    if (clientItem) {
+      clientItem.classList.add("active");
+    }
   });
 }
 
@@ -417,3 +436,30 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
 });
 
 // Функция удаления клиента из таблицы
+
+async function deleteClient(idClient) {
+  await fetch(`http://localhost:3000/api/clients/${idClient}`, {
+    method: "DELETE",
+  });
+  const CLIENT = document
+    .querySelector(`[data-id='${idClient}']`)
+    .closest(".clients__inner");
+  if (CLIENT) {
+    CLIENT.remove();
+    document.querySelector(".modal").classList.remove("open");
+  }
+}
+
+// События
+document.body.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("js-btn__delete")) {
+    const client = e.target.dataset.id;
+    const btn = document.body.querySelector(".js-delete");
+    btn.dataset.id = client;
+  }
+});
+
+document.body.querySelector(".js-delete").addEventListener("click", (e) => {
+  const id = e.target.dataset.id;
+  deleteClient(id);
+});

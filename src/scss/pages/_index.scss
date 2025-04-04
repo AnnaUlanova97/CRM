@@ -164,11 +164,32 @@
                 gap: 9px;
             }
         }
+
+        & .tooltip:nth-child(n+5):nth-child(-n+20){
+            display: none;
+
+           
+        }
+
+        &.active {
+            .tooltip {
+                display: flex !important;
+            }
+
+            .table-icon--ellipse {
+                display: none;
+            }
+        }
+
+        
+
     }
 }
 
 
 
-
+.close {
+    display: none;
+}
 
 
