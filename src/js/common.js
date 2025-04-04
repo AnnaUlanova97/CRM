@@ -152,6 +152,7 @@ async function renderClients(clientsList) {
     TIME_CREATION.classList.add("clients__time");
 
     BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
+    BTN_CHANGES.dataset.id = client.id;
     BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
     BTN_CANCEL.dataset.id = client.id;
     NAME.textContent =
