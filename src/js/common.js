@@ -59,34 +59,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 //
 
-// let client = {
-//   surname: "Скворцов",
-//   name: "Денис",
-//   middleName: "Юрьевич",
-//   contacts: [
-//     {
-//       connection: "phone",
-//       value: "88888888888",
-//     },
-//     {
-//       connection: "mail",
-//       value: "ddddd",
-//     },
-//     {
-//       connection: "fb",
-//       value: "ddfrre",
-//     },
-//     {
-//       connection: "vk",
-//       value: "aavff",
-//     },
-//   ],
-// };
-
 function svgCreate(id, classIcon = "") {
   return `<svg class="icon ${classIcon}">
-  <use xlink:href="#${id}"></use>
-  </svg>`;
+    <use xlink:href="#${id}"></use>
+    </svg>`;
 }
 
 // =========================================================
@@ -98,6 +74,12 @@ async function getClientsList() {
     .then((data) => {
       return data;
     });
+}
+
+async function getClient(id) {
+  const response = await fetch(`http://localhost:3000/api/clients/${id}`);
+  const data = await response.json();
+  return data;
 }
 
 // Функция рендера страницы
@@ -140,7 +122,12 @@ async function renderClients(clientsList) {
     CLIENT.dataset.id = client.id;
     itemsArr.forEach((i) => i.classList.add("clients__item"));
     CONTACTS.classList.add("js-clients__item");
-    BTN_CHANGES.classList.add("btn-svg", "btn-svg--purple");
+    BTN_CHANGES.classList.add(
+      "btn-svg",
+      "btn-svg--purple",
+      "js-btn-modal-open",
+      "js-btn__change"
+    );
     BTN_CANCEL.classList.add(
       "btn-svg",
       "btn-svg--red",
@@ -148,16 +135,17 @@ async function renderClients(clientsList) {
       "js-btn__delete"
     );
     BTN_CANCEL.dataset.modal = "modal-delete";
+    BTN_CHANGES.dataset.modal = "modal-open";
+    BTN_CHANGES.dataset.id = client.id;
+    BTN_CANCEL.dataset.id = client.id;
+
     TIME_CHANGE.classList.add("clients__time");
     TIME_CREATION.classList.add("clients__time");
 
     BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
-    BTN_CHANGES.dataset.id = client.id;
     BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
-    BTN_CANCEL.dataset.id = client.id;
     NAME.textContent =
       client.surname + " " + client.name + " " + client.lastName;
-    ID.textContent = client.id;
 
     DATE_CREATION.textContent = formatDate1(client.createdAt);
     TIME_CREATION.textContent = formatDate2(client.createdAt);
@@ -261,15 +249,25 @@ document.body.addEventListener("click", (e) => {
 
   if (closeBtn) {
     closeBtn.closest(".modal").classList.remove("open");
+    resetModal();
   }
 
   if (modal && e.target === modal) {
     modal.classList.remove("open");
+    resetModal();
   }
 });
 
 // Закрытие модалки
-document.body.addEventListener("click", (e) => {});
+function resetModal() {
+  document.querySelector(".input__name").value = "";
+  document.querySelector(".input__surname").value = "";
+  document.querySelector(".input__lastname").value = "";
+  document.querySelector(".modal__id").textContent = "";
+  document.querySelectorAll(".contact").forEach((el) => el.remove());
+  document.querySelector(".js-modal__btn").style.display = "flex";
+  document.querySelector(".modal__add").classList.remove("open");
+}
 
 // Слушатель для добавления еще одного контакта
 document.querySelector(".js-modal__btn").addEventListener("click", (e) => {
@@ -451,6 +449,21 @@ async function deleteClient(idClient) {
   }
 }
 
+// Функция изменения информации о клиенте
+
+// async function changeClient(params) {
+//   await fetch(`http://localhost:3000/api/clients/${idClient}`, {
+//     method: "PATCH",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({
+//       name: name.value,
+//       surname: surname.value,
+//       lastName: lastname.value,
+//       contacts: contacts,
+//     }),
+//   });
+// }
+
 // События
 document.body.addEventListener("click", async (e) => {
   if (e.target.classList.contains("js-btn__delete")) {
@@ -463,4 +476,43 @@ document.body.addEventListener("click", async (e) => {
 document.body.querySelector(".js-delete").addEventListener("click", (e) => {
   const id = e.target.dataset.id;
   deleteClient(id);
+});
+
+document.body.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("js-btn__change")) {
+    const ID = e.target.dataset.id;
+
+    const client = await getClient(ID);
+
+    const name = document.querySelector(".input__name");
+    const surname = document.querySelector(".input__surname");
+    const lastname = document.querySelector(".input__lastname");
+    const modalId = document.querySelector(".modal__id");
+
+    name.value = client.name;
+    surname.value = client.surname;
+    lastname.value = client.lastName;
+    modalId.textContent = `ID: ${ID}`;
+
+    if (client.contacts) {
+      document.querySelector(".modal__add").classList.add("open");
+      const contactBox = document.querySelector(".js-modal__inner");
+
+      client.contacts.forEach((contact) => {
+        const newContact = getSelect();
+        contactBox.append(newContact);
+
+        const input = newContact.querySelector(".contact__input");
+        const btn = newContact.querySelector(".contact__btn");
+
+        if (input && btn) {
+          input.value = contact.value;
+          btn.textContent = contact.type;
+        }
+        if (client.contacts.length >= 10) {
+          document.querySelector(".js-modal__add").style.display = "none";
+        }
+      });
+    }
+  }
 });

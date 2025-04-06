@@ -3,7 +3,7 @@ mixin modal
         div.modal__box
             div.modal__content
                 h2.modal__title Изменить данные
-                span.modal__id ID: 123458
+                span.modal__id
                 button.modal__close.js-modal-close
                     +svg-icon('close-form', 'close-icon')
                 form(action="").modal__form
@@ -18,7 +18,7 @@ mixin modal
                         input(type="text").input__lastname
             div.modal__add
                 div.modal__inner.js-modal__inner
-                button.modal__btn.js-modal__btn Добавить контакт
+                button.modal__btn.js-modal__btn.js-modal__add Добавить контакт
                     +svg-icon('add_circle_outline', 'add-icon')
             div.modal__actions
                 button.btn__save.js-btn__save Сохранить
