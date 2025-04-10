@@ -82,6 +82,25 @@ async function getClient(id) {
   return data;
 }
 
+async function deleteClientApi(idClient) {
+  await fetch(`http://localhost:3000/api/clients/${idClient}`, {
+    method: "DELETE",
+  });
+}
+
+async function changeClient({ idClient, name, surname, lastName, contacts }) {
+  await fetch(`http://localhost:3000/api/clients/${idClient}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      surname,
+      lastName,
+      contacts,
+    }),
+  });
+}
+
 // Функция рендера страницы
 async function renderClients(clientsList) {
   const CLIENT_CONTENT = document.querySelector(".clients__content");
@@ -151,6 +170,7 @@ async function renderClients(clientsList) {
     TIME_CREATION.textContent = formatDate2(client.createdAt);
     DATE_CHANGE.textContent = formatDate1(client.updatedAt);
     TIME_CHANGE.textContent = formatDate2(client.updatedAt);
+    ID.textContent = client.id;
 
     // CONTACTS
 
@@ -258,6 +278,7 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
+let currentClientId;
 // Закрытие модалки
 function resetModal() {
   document.querySelector(".input__name").value = "";
@@ -267,6 +288,7 @@ function resetModal() {
   document.querySelectorAll(".contact").forEach((el) => el.remove());
   document.querySelector(".js-modal__btn").style.display = "flex";
   document.querySelector(".modal__add").classList.remove("open");
+  currentClientId = null;
 }
 
 // Слушатель для добавления еще одного контакта
@@ -435,34 +457,19 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
 });
 
 // Функция удаления клиента из таблицы
-
-async function deleteClient(idClient) {
-  await fetch(`http://localhost:3000/api/clients/${idClient}`, {
-    method: "DELETE",
-  });
+document.body.querySelector(".js-delete").addEventListener("click", (e) => {
+  const id = e.target.dataset.id;
   const CLIENT = document
-    .querySelector(`[data-id='${idClient}']`)
+    .querySelector(`[data-id='${id}']`)
     .closest(".clients__inner");
   if (CLIENT) {
     CLIENT.remove();
     document.querySelector(".modal").classList.remove("open");
   }
-}
+  deleteClientApi(id);
+});
 
 // Функция изменения информации о клиенте
-
-// async function changeClient(params) {
-//   await fetch(`http://localhost:3000/api/clients/${idClient}`, {
-//     method: "PATCH",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({
-//       name: name.value,
-//       surname: surname.value,
-//       lastName: lastname.value,
-//       contacts: contacts,
-//     }),
-//   });
-// }
 
 // События
 document.body.addEventListener("click", async (e) => {
@@ -473,46 +480,58 @@ document.body.addEventListener("click", async (e) => {
   }
 });
 
-document.body.querySelector(".js-delete").addEventListener("click", (e) => {
-  const id = e.target.dataset.id;
-  deleteClient(id);
-});
-
 document.body.addEventListener("click", async (e) => {
   if (e.target.classList.contains("js-btn__change")) {
-    const ID = e.target.dataset.id;
-
-    const client = await getClient(ID);
+    const id = e.target.dataset.id;
+    const client = await getClient(id);
+    currentClientId = client.id;
 
     const name = document.querySelector(".input__name");
     const surname = document.querySelector(".input__surname");
     const lastname = document.querySelector(".input__lastname");
-    const modalId = document.querySelector(".modal__id");
 
     name.value = client.name;
     surname.value = client.surname;
     lastname.value = client.lastName;
-    modalId.textContent = `ID: ${ID}`;
 
-    if (client.contacts) {
-      document.querySelector(".modal__add").classList.add("open");
-      const contactBox = document.querySelector(".js-modal__inner");
+    const modal = document.getElementById("modal-open");
+    modal.classList.add("open");
 
+    const contactWrapper = document.querySelector(".js-modal__inner");
+    document.querySelectorAll(".contact").forEach((el) => el.remove());
+
+    if (client.contacts && client.contacts.length > 0) {
       client.contacts.forEach((contact) => {
-        const newContact = getSelect();
-        contactBox.append(newContact);
+        const contactElem = getSelect();
+        const typeBtn = contactElem.querySelector(".contact__btn");
+        const input = contactElem.querySelector(".js-contact-input");
 
-        const input = newContact.querySelector(".contact__input");
-        const btn = newContact.querySelector(".contact__btn");
+        typeBtn.textContent = contact.type;
+        input.value = contact.value;
 
-        if (input && btn) {
-          input.value = contact.value;
-          btn.textContent = contact.type;
+        // Установим type input по типу
+        if (contact.type === "Email") {
+          input.setAttribute("type", "email");
+        } else if (contact.type === "Доп. телефон") {
+          input.setAttribute("type", "tel");
+        } else if (["Vk", "Facebook"].includes(contact.type)) {
+          input.setAttribute("type", "url");
         }
-        if (client.contacts.length >= 10) {
-          document.querySelector(".js-modal__add").style.display = "none";
-        }
+
+        contactWrapper.append(contactElem);
       });
+
+      document.querySelector(".modal__add").classList.add("open");
     }
+  }
+});
+
+// Сортировка
+document.body.addEventListener("click", (e) => {
+  const sortBtn = e.target.closest(".js-btn__sort--id");
+  const sortSvg = document.body.querySelector(".js-icon");
+
+  if (sortBtn) {
+    sortSvg.classList.toggle("icon--transform");
   }
 });

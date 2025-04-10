@@ -13,16 +13,16 @@ block content
         div.clients__wrap
             div.clients__table
                 div.clients__filters
-                    button.clients__headline ID
-                        +svg-icon('arrow_downward', 'clients__icon')
-                    button.clients__headline Фамилия Имя Отчество 
+                    button.clients__headline.js-btn__sort--id ID
+                        +svg-icon('arrow_downward', 'clients__icon js-icon')
+                    button.clients__headline.js-btn__sort--name Фамилия Имя Отчество 
                         +svg-icon('arrow-az', 'clients__icon--az')
                     button.clients__headline.clients__headline--max Дата и время создания
                         +svg-icon('arrow_downward', 'clients__icon')
                     button.clients__headline.clients__headline--max Последние изменения
                         +svg-icon('arrow_downward', 'clients__icon')
-                    button.clients__headline Контакты
-                    button.clients__headline Действия
+                    p.clients__headline Контакты
+                    p.clients__headline Действия
                 div.clients__content
                     //- ul.clients__inner.clients__filters
                     //-     li.clients__item  111112

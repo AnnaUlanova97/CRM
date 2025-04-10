@@ -28,4 +28,8 @@
     &.active {
         display: none;
     }
+
+    &--transform {
+        transform: rotate(180deg);
+    }
   }
