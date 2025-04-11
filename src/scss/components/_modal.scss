@@ -66,7 +66,11 @@
         top: 15px;
         right: 15px;
         width: 29px;
-        height: 29px;    
+        height: 29px;
+
+        & svg {
+            pointer-events: none;
+        }
     }
 
 

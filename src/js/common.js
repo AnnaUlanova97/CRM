@@ -102,7 +102,7 @@ async function changeClient({ idClient, name, surname, lastName, contacts }) {
 }
 
 // Функция рендера страницы
-async function renderClients(clientsList) {
+async function renderClients(clientsList)  {
   const CLIENT_CONTENT = document.querySelector(".clients__content");
 
   clientsList.forEach((client) => {
@@ -119,6 +119,7 @@ async function renderClients(clientsList) {
     const TIME_CREATION = document.createElement("span");
     const TIME_CHANGE = document.createElement("span");
 
+    // Вынести из функции
     const formatDate1 = (dateStr) => {
       const date = new Date(dateStr);
 
@@ -139,7 +140,7 @@ async function renderClients(clientsList) {
 
     CLIENT.classList.add("clients__inner", "clients__filters");
     CLIENT.dataset.id = client.id;
-    itemsArr.forEach((i) => i.classList.add("clients__item"));
+    itemsArr.forEach((item) => item.classList.add("clients__item"));
     CONTACTS.classList.add("js-clients__item");
     BTN_CHANGES.classList.add(
       "btn-svg",
@@ -174,6 +175,7 @@ async function renderClients(clientsList) {
 
     // CONTACTS
 
+    // Вынеси функцию отдельно
     function createContactIcon(key) {
       const BTN = document.createElement("span");
 
@@ -236,6 +238,9 @@ async function renderClients(clientsList) {
   });
 
   document.body.addEventListener("click", (e) => {
+    // Класс поменять
+    // Проверь как это работает, нажми на любой контакт, а не только на +
+    //  И слушатели у тебя лежат не тут
     const clientItem = e.target.closest(".js-clients__item");
     if (clientItem) {
       clientItem.classList.add("active");
@@ -243,6 +248,7 @@ async function renderClients(clientsList) {
   });
 }
 
+// Вынеси инит на самый верх, так будет удобнее и лучше переименуй ее в renderTable
 async function init() {
   const CLIENT_CONTENT = document.querySelector(".clients__content");
   CLIENT_CONTENT.innerHTML = "";
@@ -254,33 +260,39 @@ init();
 
 // Открытие модалки
 document.body.addEventListener("click", (e) => {
-  // if (e.target.classList.closest("js-btn-modal-toggle")) {
-  //   let id = e.target.dataset.modal;
+  if (e.target.classList.contains("js-btn-modal-open")) {
+    let id = e.target.dataset.modal;
+    document.getElementById(id).classList.toggle("open");
+  }
+
+  // Нажатие за границы контейнера сделать
+
+
+  // const btn = e.target.closest(".js-btn-modal-open");
+  // const closeBtn = e.target.closest(".js-modal-close");
+  // const modal = e.target.closest(".modal");
+  //
+  // if (btn) {
+  //   let id = btn.dataset.modal;
   //   document.getElementById(id).classList.add("open");
-  // } Твоим способом НЕ ПОЛУЧАЕТСЯ
-  const btn = e.target.closest(".js-btn-modal-open");
-  const closeBtn = e.target.closest(".js-modal-close");
-  const modal = e.target.closest(".modal");
-
-  if (btn) {
-    let id = btn.dataset.modal;
-    document.getElementById(id).classList.add("open");
-  }
-
-  if (closeBtn) {
-    closeBtn.closest(".modal").classList.remove("open");
-    resetModal();
-  }
-
-  if (modal && e.target === modal) {
-    modal.classList.remove("open");
-    resetModal();
-  }
+  // }
+  //
+  // if (closeBtn) {
+  //   closeBtn.closest(".modal").classList.remove("open");
+  //   resetModal();
+  // }
+  //
+  // if (modal && e.target === modal) {
+  //   modal.classList.remove("open");
+  //   resetModal();
+  // }
 });
 
+// Скорее всего это уже не нужно
 let currentClientId;
 // Закрытие модалки
 function resetModal() {
+  // Судя по всему тут логика сборса модалки перед закрытием, это хорошо что она в функции отдельно. Вызывай эту функцию когда модалка закрывается, только тебе надо придумать как теперь это отслеживать, тк у тебя там нет отдельной кнопки закрытия
   document.querySelector(".input__name").value = "";
   document.querySelector(".input__surname").value = "";
   document.querySelector(".input__lastname").value = "";
@@ -426,6 +438,8 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
     }
   });
 
+  // Вынести в функцию отдельную
+
   const response = await fetch("http://localhost:3000/api/clients", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -472,7 +486,9 @@ document.body.querySelector(".js-delete").addEventListener("click", (e) => {
 // Функция изменения информации о клиенте
 
 // События
+// Подпиши событие
 document.body.addEventListener("click", async (e) => {
+  // Класс поменяй
   if (e.target.classList.contains("js-btn__delete")) {
     const client = e.target.dataset.id;
     const btn = document.body.querySelector(".js-delete");
@@ -480,11 +496,14 @@ document.body.addEventListener("click", async (e) => {
   }
 });
 
+
+// Открытие модалки для изменения клиента
 document.body.addEventListener("click", async (e) => {
+  // Правильно писать так js-btn-change
   if (e.target.classList.contains("js-btn__change")) {
     const id = e.target.dataset.id;
     const client = await getClient(id);
-    currentClientId = client.id;
+    // currentClientId = client.id;
 
     const name = document.querySelector(".input__name");
     const surname = document.querySelector(".input__surname");
@@ -494,9 +513,11 @@ document.body.addEventListener("click", async (e) => {
     surname.value = client.surname;
     lastname.value = client.lastName;
 
+    // Переделать на нормальный уникальный id
     const modal = document.getElementById("modal-open");
     modal.classList.add("open");
 
+    // Поменять на нормальный класс для обертки контактов
     const contactWrapper = document.querySelector(".js-modal__inner");
     document.querySelectorAll(".contact").forEach((el) => el.remove());
 
@@ -521,6 +542,7 @@ document.body.addEventListener("click", async (e) => {
         contactWrapper.append(contactElem);
       });
 
+      // modal__add-contact  либо wrapp
       document.querySelector(".modal__add").classList.add("open");
     }
   }

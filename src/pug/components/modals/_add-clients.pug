@@ -4,7 +4,7 @@ mixin modal
             div.modal__content
                 h2.modal__title Изменить данные
                 span.modal__id
-                button.modal__close.js-modal-close
+                button(data-modal="modal-open").modal__close.js-btn-modal-open
                     +svg-icon('close-form', 'close-icon')
                 form(action="").modal__form
                     div.input.input--required
