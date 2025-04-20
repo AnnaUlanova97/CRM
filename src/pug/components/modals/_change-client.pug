@@ -1,0 +1,27 @@
+mixin change-client
+    div.change-client#modal-change
+        div.change-client__box
+            div.change-client__content
+                button(data-modal="modal-add").modal-wrap__close.js-btn-modal-toggle
+                    +svg-icon('close-form', 'close-icon')
+                h2.change-client__title Изменить данные
+                span.change-client__id
+                form(action="").change-client__form
+                    div.input.input--required
+                        p Фамилия
+                        input(type="text" required).input__surname
+                    div.input.input--required 
+                        p Имя
+                        input(type="text" required).input__name
+                    div.input
+                        p Отчество
+                        input(type="text").input__lastname
+            div.change-client__add-contact
+                div.change-client__inner.js-modal-select
+                button.change-client__btn.js-modal-btn Добавить контакт
+                    +svg-icon('add_circle_outline', 'add-icon')
+            div.change-client__actions
+                button.btn__change.js-save-changes Сохранить
+                button.btn__delete Удалить клиента
+    
+

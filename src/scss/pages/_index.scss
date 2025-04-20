@@ -150,6 +150,11 @@
         gap: 7px;
         margin: auto 0;
         font-size: 14px;
+
+        &:nth-child(5n) {
+            display: grid;
+            grid-template-columns: repeat(5, 16px);
+        }
    
         
         &:first-child {

@@ -1,12 +1,12 @@
-mixin modal
-    div.modal#modal-open
-        div.modal__box
-            div.modal__content
-                h2.modal__title Изменить данные
-                span.modal__id
-                button(data-modal="modal-open").modal__close.js-btn-modal-open
+mixin add-client
+    div.add-client#add-client
+        div.add-client__box
+            div.add-client__content
+                button(data-modal="modal-add").modal-wrap__close.js-btn-modal-toggle
                     +svg-icon('close-form', 'close-icon')
-                form(action="").modal__form
+                h2.add-client__title Добавить клиента
+                span.add-client__id
+                form(action="").add-client__form
                     div.input.input--required
                         p Фамилия
                         input(type="text" required).input__surname
@@ -16,15 +16,14 @@ mixin modal
                     div.input
                         p Отчество
                         input(type="text").input__lastname
-            div.modal__add
-                div.modal__inner.js-modal__inner
-                button.modal__btn.js-modal__btn.js-modal__add Добавить контакт
-                    +svg-icon('add_circle_outline', 'add-icon')
-            div.modal__actions
-                button.btn__save.js-btn__save Сохранить
-                button.btn__delete Удалить клиента
+                div.add-client__add-contact
+                    div.add-client__inner.js-modal-select
+                    button.add-client__btn.js-modal-btn Добавить контакт
+                        +svg-icon('add_circle_outline', 'add-icon')
+                div.add-client__actions
+                    button.btn__save.js-btn-save Сохранить
+                    button.btn__delete Удалить клиента
 
-    
 
 
 

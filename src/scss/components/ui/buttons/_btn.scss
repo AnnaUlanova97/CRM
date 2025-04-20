@@ -2,37 +2,15 @@
   @extend %reset-btn;
 
   cursor: pointer;
-}
 
-
-
-
-  // &__icon,
-  //   &__arrow {
-  //       width: 12px;
-  //       height: 12px;
-    
-  //       &--az {
-  //         width: 29px;
-  //         height: 14px;
-  //       }
-  //   }
-
-
-
-
-.add-icon {
-  width: 16px;
-  height: 16px;
-}
-
-
-//Дублирует
-.btn {
-  &__save {
+  &__save, &__change {
     padding: 12px 35px;
     background-color: var(--color-secondary);
     color: var(--color-white);
+  }
+
+  &-svg svg {
+    pointer-events: none;
   }
 
 
@@ -45,6 +23,12 @@
     border-bottom: 1px solid var(--color-black);
   }
 }
+
+.add-icon {
+  width: 16px;
+  height: 16px;
+}
+
 
 .contact-cancel {
   fill: var(--color-primary);

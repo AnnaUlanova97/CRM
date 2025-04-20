@@ -13,7 +13,7 @@ block content
         div.clients__wrap
             div.clients__table
                 div.clients__filters
-                    button.clients__headline.js-btn__sort--id ID
+                    button.clients__headline.js-btn-sort ID
                         +svg-icon('arrow_downward', 'clients__icon js-icon')
                     button.clients__headline.js-btn__sort--name Фамилия Имя Отчество 
                         +svg-icon('arrow-az', 'clients__icon--az')
@@ -48,12 +48,11 @@ block content
                     //-         button.btn-svg.btn-svg--red Удалить
                     //-             +svg-icon('cancel', 'table-icon_cancel')
                 //- +svg-icon('frame', 'clients__frame')
-            button.btn-secondary.js-btn-modal-open(data-modal='modal-open')
+            button.btn-secondary.js-btn-modal-toggle(data-modal='modal-add')#client-add
                 +svg-icon('btn-add', 'clients__svg')
                 span Добавить клиента
-    //- Без миксинов не работает
-    +delete
     +modal
+
 
    
             

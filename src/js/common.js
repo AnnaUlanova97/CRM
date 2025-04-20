@@ -82,6 +82,26 @@ async function getClient(id) {
   return data;
 }
 
+async function saveClient({ name, surname, lastname, contacts }) {
+  const response = await fetch("http://localhost:3000/api/clients", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      // * обязательное поле, имя клиента
+      name: name.value,
+      // * обязательное поле, фамилия клиента
+      surname: surname.value,
+      // необязательное поле, отчество клиента
+      lastName: lastname.value,
+      // контакты - необязательное поле, массив контактов
+      // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
+      contacts: contacts,
+    }),
+  });
+  const data = await response.json();
+  return data;
+}
+
 async function deleteClientApi(idClient) {
   await fetch(`http://localhost:3000/api/clients/${idClient}`, {
     method: "DELETE",
@@ -101,8 +121,45 @@ async function changeClient({ idClient, name, surname, lastName, contacts }) {
   });
 }
 
+const formatDate1 = (dateStr) => {
+  const date = new Date(dateStr);
+
+  return date.toLocaleString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
+
+const formatDate2 = (dateStr) => {
+  const date2 = new Date(dateStr);
+  return date2.toLocaleString("ru-RU", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+async function renderTable() {
+  const CLIENT_CONTENT = document.querySelector(".clients__content");
+  CLIENT_CONTENT.innerHTML = "";
+
+  const clients = await getClientsList();
+  renderClients(clients);
+}
+renderTable();
+
+function createContactIcon(key) {
+  const BTN = document.createElement("span");
+
+  BTN.classList.add("tooltip");
+
+  BTN.innerHTML = `${svgCreate(key, "table-icon")}`;
+
+  return BTN;
+}
+
 // Функция рендера страницы
-async function renderClients(clientsList)  {
+async function renderClients(clientsList) {
   const CLIENT_CONTENT = document.querySelector(".clients__content");
 
   clientsList.forEach((client) => {
@@ -119,43 +176,26 @@ async function renderClients(clientsList)  {
     const TIME_CREATION = document.createElement("span");
     const TIME_CHANGE = document.createElement("span");
 
-    // Вынести из функции
-    const formatDate1 = (dateStr) => {
-      const date = new Date(dateStr);
-
-      return date.toLocaleString("ru-RU", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-    };
-
-    const formatDate2 = (dateStr) => {
-      const date2 = new Date(dateStr);
-      return date2.toLocaleString("ru-RU", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    };
-
     CLIENT.classList.add("clients__inner", "clients__filters");
     CLIENT.dataset.id = client.id;
     itemsArr.forEach((item) => item.classList.add("clients__item"));
-    CONTACTS.classList.add("js-clients__item");
+    CONTACTS.classList.add("js-contacts");
     BTN_CHANGES.classList.add(
       "btn-svg",
       "btn-svg--purple",
-      "js-btn-modal-open",
-      "js-btn__change"
+      "js-btn-modal-toggle",
+      "js-btn-change"
     );
     BTN_CANCEL.classList.add(
       "btn-svg",
       "btn-svg--red",
-      "js-btn-modal-open",
-      "js-btn__delete"
+      "js-btn-modal-toggle",
+      "js-btn-delete"
     );
     BTN_CANCEL.dataset.modal = "modal-delete";
-    BTN_CHANGES.dataset.modal = "modal-open";
+    BTN_CHANGES.dataset.modal = "modal-change";
+    BTN_CHANGES.id = "client-change";
+    BTN_CANCEL.id = "delete-client";
     BTN_CHANGES.dataset.id = client.id;
     BTN_CANCEL.dataset.id = client.id;
 
@@ -174,17 +214,6 @@ async function renderClients(clientsList)  {
     ID.textContent = client.id;
 
     // CONTACTS
-
-    // Вынеси функцию отдельно
-    function createContactIcon(key) {
-      const BTN = document.createElement("span");
-
-      BTN.classList.add("tooltip");
-
-      BTN.innerHTML = `${svgCreate(key, "table-icon")}`;
-
-      return BTN;
-    }
 
     const contactTypes = {
       Facebook: "fb",
@@ -236,76 +265,69 @@ async function renderClients(clientsList)  {
     DATE_CHANGE.append(TIME_CHANGE);
     CLIENT_CONTENT.append(CLIENT);
   });
-
-  document.body.addEventListener("click", (e) => {
-    // Класс поменять
-    // Проверь как это работает, нажми на любой контакт, а не только на +
-    //  И слушатели у тебя лежат не тут
-    const clientItem = e.target.closest(".js-clients__item");
-    if (clientItem) {
-      clientItem.classList.add("active");
-    }
-  });
 }
-
-// Вынеси инит на самый верх, так будет удобнее и лучше переименуй ее в renderTable
-async function init() {
-  const CLIENT_CONTENT = document.querySelector(".clients__content");
-  CLIENT_CONTENT.innerHTML = "";
-
-  const clients = await getClientsList();
-  renderClients(clients);
-}
-init();
 
 // Открытие модалки
 document.body.addEventListener("click", (e) => {
-  if (e.target.classList.contains("js-btn-modal-open")) {
-    let id = e.target.dataset.modal;
-    document.getElementById(id).classList.toggle("open");
+  if (e.target.classList.contains("js-btn-modal-toggle")) {
+    document.querySelector(".modal-wrap").classList.toggle("open");
+
+    // let id = e.target.dataset.modal;
+
+    if (e.target.id === "client-add") {
+      document.querySelector(".add-client").classList.add("open");
+    }
+
+    if (e.target.id === "client-change") {
+      document.querySelector(".change-client").classList.add("open");
+    }
+
+    if (e.target.id === "delete-client") {
+      document.querySelector(".delete-client").classList.add("open");
+    }
   }
 
-  // Нажатие за границы контейнера сделать
-
-
-  // const btn = e.target.closest(".js-btn-modal-open");
-  // const closeBtn = e.target.closest(".js-modal-close");
-  // const modal = e.target.closest(".modal");
-  //
-  // if (btn) {
-  //   let id = btn.dataset.modal;
-  //   document.getElementById(id).classList.add("open");
-  // }
-  //
-  // if (closeBtn) {
-  //   closeBtn.closest(".modal").classList.remove("open");
-  //   resetModal();
-  // }
-  //
-  // if (modal && e.target === modal) {
-  //   modal.classList.remove("open");
-  //   resetModal();
-  // }
+  if (
+    e.target === e.target.closest(".modal-wrap") ||
+    e.target === e.target.closest(".modal-wrap__close")
+  ) {
+    document.getElementById("modal-add").classList.remove("open");
+    document.querySelector(".add-client").classList.remove("open");
+    document.getElementById("modal-change").classList.remove("open");
+    document.querySelector(".delete-client").classList.remove("open");
+  }
 });
 
-// Скорее всего это уже не нужно
-let currentClientId;
 // Закрытие модалки
 function resetModal() {
   // Судя по всему тут логика сборса модалки перед закрытием, это хорошо что она в функции отдельно. Вызывай эту функцию когда модалка закрывается, только тебе надо придумать как теперь это отслеживать, тк у тебя там нет отдельной кнопки закрытия
+  // Я добавила ее туда, где возвращается ответ с сервера во время создания нового клиента
   document.querySelector(".input__name").value = "";
   document.querySelector(".input__surname").value = "";
   document.querySelector(".input__lastname").value = "";
-  document.querySelector(".modal__id").textContent = "";
+  document.querySelector(".add-client__id").textContent = "";
   document.querySelectorAll(".contact").forEach((el) => el.remove());
-  document.querySelector(".js-modal__btn").style.display = "flex";
-  document.querySelector(".modal__add").classList.remove("open");
-  currentClientId = null;
+  document.querySelector(".js-modal-btn").style.display = "flex";
+  document.querySelector(".add-client__add-contact").classList.remove("open");
+  // currentClientId = null;
 }
 
 // Слушатель для добавления еще одного контакта
-document.querySelector(".js-modal__btn").addEventListener("click", (e) => {
-  document.querySelector(".modal__inner").append(getSelect());
+document.body.addEventListener("click", (e) => {
+  if (e.target.querySelector(".js-modal-btn")) {
+    e.target.querySelector(".add-client__inner").append(getSelect());
+
+    const arr = [...document.querySelectorAll(".js-contact-input")];
+
+    if (arr.length >= 10) {
+      e.target.style.display = "none";
+    }
+
+    document.querySelector(".add-client__add-contact").classList.add("open");
+  }
+});
+document.querySelector(".js-modal-btn").addEventListener("click", (e) => {
+  document.querySelector(".add-client__inner").append(getSelect());
 
   const arr = [...document.querySelectorAll(".js-contact-input")];
 
@@ -313,11 +335,11 @@ document.querySelector(".js-modal__btn").addEventListener("click", (e) => {
     e.target.style.display = "none";
   }
 
-  document.querySelector(".modal__add").classList.add("open");
+  document.querySelector(".add-client__add-contact").classList.add("open");
 });
 
 // События селекта
-document.querySelector(".js-modal__inner").addEventListener("click", (e) => {
+document.querySelector(".js-modal-select").addEventListener("click", (e) => {
   // Открытие/закрытие селекта
   const content = e.target.closest(".contact__content");
   if (content) {
@@ -419,7 +441,7 @@ function getSelect() {
 }
 
 // Функция слушателя на добавление нового клиента в таблицу
-document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
+document.querySelector(".js-btn-save").addEventListener("click", async (e) => {
   const name = document.querySelector(".input__name");
   const surname = document.querySelector(".input__surname");
   const lastname = document.querySelector(".input__lastname");
@@ -438,35 +460,19 @@ document.querySelector(".js-btn__save").addEventListener("click", async (e) => {
     }
   });
 
-  // Вынести в функцию отдельную
+  const client = await saveClient({ name, surname, lastname, contacts });
 
-  const response = await fetch("http://localhost:3000/api/clients", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      // * обязательное поле, имя клиента
-      name: name.value,
-      // * обязательное поле, фамилия клиента
-      surname: surname.value,
-      // необязательное поле, отчество клиента
-      lastName: lastname.value,
-      // контакты - необязательное поле, массив контактов
-      // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
-      contacts: contacts,
-    }),
-  });
-  const data = await response.json();
-
-  if (response.status === 201) {
+  if (client) {
     document.querySelectorAll(".contact").forEach((el) => el.remove());
-    document.querySelector(".modal__add").classList.remove("open");
-    document.getElementById("modal-open").classList.remove("open");
+    document.querySelector(".add-client__add-contact").classList.remove("open");
+    document.getElementById("modal-add").classList.remove("open");
 
     name.value = "";
     surname.value = "";
     lastname.value = "";
     input.value = "";
-    await init();
+    await renderTable();
+    resetModal();
   }
 });
 
@@ -478,7 +484,7 @@ document.body.querySelector(".js-delete").addEventListener("click", (e) => {
     .closest(".clients__inner");
   if (CLIENT) {
     CLIENT.remove();
-    document.querySelector(".modal").classList.remove("open");
+    document.querySelector(".modal-wrap").classList.remove("open");
   }
   deleteClientApi(id);
 });
@@ -486,40 +492,47 @@ document.body.querySelector(".js-delete").addEventListener("click", (e) => {
 // Функция изменения информации о клиенте
 
 // События
-// Подпиши событие
+// Слушатель на открытие модалки удаления клиента
 document.body.addEventListener("click", async (e) => {
-  // Класс поменяй
-  if (e.target.classList.contains("js-btn__delete")) {
+  if (e.target.classList.contains("js-btn-delete")) {
     const client = e.target.dataset.id;
     const btn = document.body.querySelector(".js-delete");
     btn.dataset.id = client;
   }
 });
-
+// слушатель на показ всех контактов
+document.body.addEventListener("click", (e) => {
+  // Так лучше? сделала два условия
+  const clientItem = e.target.closest(".js-contacts");
+  const clientEllipse = e.target.closest(".table-icon--ellipse");
+  if (clientItem && clientEllipse) {
+    clientItem.classList.add("active");
+  }
+});
 
 // Открытие модалки для изменения клиента
 document.body.addEventListener("click", async (e) => {
-  // Правильно писать так js-btn-change
-  if (e.target.classList.contains("js-btn__change")) {
+  if (e.target.classList.contains("js-btn-change")) {
+    const btn = document.body.querySelector(".js-save-changes");
     const id = e.target.dataset.id;
     const client = await getClient(id);
+
     // currentClientId = client.id;
 
-    const name = document.querySelector(".input__name");
-    const surname = document.querySelector(".input__surname");
-    const lastname = document.querySelector(".input__lastname");
+    const modal = document.getElementById("modal-change");
+    modal.classList.add("open");
 
+    const name = modal.querySelector(".input__name");
+    const surname = modal.querySelector(".input__surname");
+    const lastname = modal.querySelector(".input__lastname");
+
+    btn.dataset.id = id;
     name.value = client.name;
     surname.value = client.surname;
     lastname.value = client.lastName;
 
-    // Переделать на нормальный уникальный id
-    const modal = document.getElementById("modal-open");
-    modal.classList.add("open");
-
-    // Поменять на нормальный класс для обертки контактов
-    const contactWrapper = document.querySelector(".js-modal__inner");
-    document.querySelectorAll(".contact").forEach((el) => el.remove());
+    const contactWrapper = modal.querySelector(".js-modal-select");
+    contactWrapper.innerHTML = ""; // удалим старые контакты
 
     if (client.contacts && client.contacts.length > 0) {
       client.contacts.forEach((contact) => {
@@ -527,10 +540,13 @@ document.body.addEventListener("click", async (e) => {
         const typeBtn = contactElem.querySelector(".contact__btn");
         const input = contactElem.querySelector(".js-contact-input");
 
+        if (!typeBtn || !input) {
+          return;
+        }
+
         typeBtn.textContent = contact.type;
         input.value = contact.value;
 
-        // Установим type input по типу
         if (contact.type === "Email") {
           input.setAttribute("type", "email");
         } else if (contact.type === "Доп. телефон") {
@@ -542,15 +558,24 @@ document.body.addEventListener("click", async (e) => {
         contactWrapper.append(contactElem);
       });
 
-      // modal__add-contact  либо wrapp
-      document.querySelector(".modal__add").classList.add("open");
+      document
+        .querySelector(".change-client__add-contact")
+        .classList.add("open");
     }
   }
 });
 
+// Слушатель на кнопку сохранинея изменений клиента
+document.body
+  .querySelector(".js-save-changes")
+  .addEventListener("click", (e) => {
+    const id = e.target.dataset.id;
+    changeClient({ id, name, surname, lastName, contacts });
+  });
+
 // Сортировка
 document.body.addEventListener("click", (e) => {
-  const sortBtn = e.target.closest(".js-btn__sort--id");
+  const sortBtn = e.target.closest(".js-btn-sort");
   const sortSvg = document.body.querySelector(".js-icon");
 
   if (sortBtn) {
