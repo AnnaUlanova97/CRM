@@ -510,6 +510,7 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
+let getClientData = {};
 // Открытие модалки для изменения клиента
 document.body.addEventListener("click", async (e) => {
   if (e.target.classList.contains("js-btn-change")) {
@@ -532,7 +533,7 @@ document.body.addEventListener("click", async (e) => {
     lastname.value = client.lastName;
 
     const contactWrapper = modal.querySelector(".js-modal-select");
-    contactWrapper.innerHTML = ""; // удалим старые контакты
+    contactWrapper.innerHTML = "";
 
     if (client.contacts && client.contacts.length > 0) {
       client.contacts.forEach((contact) => {
@@ -562,15 +563,24 @@ document.body.addEventListener("click", async (e) => {
         .querySelector(".change-client__add-contact")
         .classList.add("open");
     }
+    getClientData.idClient = id;
   }
 });
 
-// Слушатель на кнопку сохранинея изменений клиента
+// Слушатель на кнопку сохранения изменений клиента
 document.body
   .querySelector(".js-save-changes")
-  .addEventListener("click", (e) => {
-    const id = e.target.dataset.id;
-    changeClient({ id, name, surname, lastName, contacts });
+  .addEventListener("click", async (e) => {
+    const modal = document.getElementById("modal-change");
+    const nameNew = modal.querySelector(".input__name");
+    const surnameNew = modal.querySelector(".input__surname");
+    const lastnameNew = modal.querySelector(".input__lastname");
+    getClientData.name = nameNew.value;
+    getClientData.surname = surnameNew.value;
+    getClientData.lastName = lastnameNew.value;
+
+    console.log(getClientData);
+    changeClient(getClientData);
   });
 
 // Сортировка
