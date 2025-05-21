@@ -23,6 +23,7 @@
 
 
   .icon {
+    pointer-events: none;
     display: inline-block;
 
     &.active {
@@ -31,5 +32,10 @@
 
     &--transform {
         transform: rotate(180deg);
+    }
+
+    &--az {
+        width: 29px;
+        height: 14px;
     }
   }

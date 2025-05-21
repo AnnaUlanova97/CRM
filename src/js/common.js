@@ -158,8 +158,12 @@ function createContactIcon(key) {
   return BTN;
 }
 
+let clientsArray = [];
+
 // Функция рендера страницы
 async function renderClients(clientsList) {
+  clientsArray = clientsList;
+
   const CLIENT_CONTENT = document.querySelector(".clients__content");
 
   clientsList.forEach((client) => {
@@ -201,6 +205,7 @@ async function renderClients(clientsList) {
 
     TIME_CHANGE.classList.add("clients__time");
     TIME_CREATION.classList.add("clients__time");
+    ID.classList.add("js-id");
 
     BTN_CHANGES.innerHTML = `Изменить ${svgCreate("actions", "table-icon")}`;
     BTN_CANCEL.innerHTML = `Удалить ${svgCreate("cancel", "table-icon")}`;
@@ -309,6 +314,10 @@ function resetModal() {
   document.querySelectorAll(".contact").forEach((el) => el.remove());
   document.querySelector(".js-modal-btn").style.display = "flex";
   document.querySelector(".add-client__add-contact").classList.remove("open");
+  document.getElementById("modal-add").classList.remove("open");
+  document.getElementById("delete-client").classList.remove("open");
+  document.getElementById("modal-change").classList.remove("open");
+  document.getElementById("add-client").classList.remove("open");
   // currentClientId = null;
 }
 
@@ -575,20 +584,175 @@ document.body
     const nameNew = modal.querySelector(".input__name");
     const surnameNew = modal.querySelector(".input__surname");
     const lastnameNew = modal.querySelector(".input__lastname");
+    const contactBox = modal.querySelectorAll(".contact");
+    const contacts = [];
+
+    contactBox.forEach((div) => {
+      const type = div.querySelector(".contact__btn").textContent.trim();
+      const value = div.querySelector(".js-contact-input").value.trim();
+
+      if (value) {
+        contacts.push({ type, value });
+      }
+    });
+
     getClientData.name = nameNew.value;
     getClientData.surname = surnameNew.value;
     getClientData.lastName = lastnameNew.value;
+    getClientData.contacts = contacts;
 
-    console.log(getClientData);
-    changeClient(getClientData);
+    await changeClient(getClientData);
+    resetModal();
+    await renderTable();
   });
 
-// Сортировка
+// Сортировка по ID
 document.body.addEventListener("click", (e) => {
-  const sortBtn = e.target.closest(".js-btn-sort");
-  const sortSvg = document.body.querySelector(".js-icon");
+  if (e.target.classList.contains("js-sort-id")) {
+    const sortSvg = document.querySelector(".js-icon-id");
+    const clientsWrap = document.querySelector(".clients__content");
 
-  if (sortBtn) {
-    sortSvg.classList.toggle("icon--transform");
+    const isAsc = sortSvg.classList.toggle("icon--transform");
+
+    const sortedClients = [...clientsArray].sort((a, b) => {
+      return isAsc ? b.id - a.id : a.id - b.id;
+    });
+
+    sortedClients.forEach((client) => {
+      const clientNode = document.querySelector(
+        `.clients__inner[data-id="${client.id}"]`
+      );
+      if (clientNode) {
+        clientsWrap.appendChild(clientNode);
+      }
+    });
   }
 });
+
+// Сортировка по имени
+document.body.addEventListener("click", (e) => {
+  if (e.target.classList.contains("js-sort-name")) {
+    const sortSvg = document.querySelector(".js-icon-name");
+    const clientsWrap = document.querySelector(".clients__content");
+
+    const isAsc = sortSvg.classList.toggle("icon--transform");
+
+    const sortedClients = [...clientsArray].sort((a, b) => {
+      const nameCompare = a.name.localeCompare(b.name);
+      if (nameCompare !== 0) return isAsc ? nameCompare : -nameCompare;
+      return isAsc
+        ? a.surname.localeCompare(b.surname)
+        : b.surname.localeCompare(a.surname);
+    });
+
+    sortedClients.forEach((client) => {
+      const clientNode = document.querySelector(
+        `.clients__inner[data-id="${client.id}"]`
+      );
+      if (clientNode) {
+        clientsWrap.appendChild(clientNode);
+      }
+    });
+  }
+});
+
+//Сортировка по дате создания
+document.body.addEventListener("click", (e) => {
+  if (e.target.classList.contains("js-sort-save")) {
+    const sortSvg = document.querySelector(".js-icon-save");
+    const clientsWrap = document.querySelector(".clients__content");
+
+    const isAsc = sortSvg.classList.toggle("icon--transform");
+
+    const sortedClients = [...clientsArray].sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return isAsc ? dateB - dateA : dateA - dateB;
+    });
+
+    sortedClients.forEach((client) => {
+      const clientNode = document.querySelector(
+        `.clients__inner[data-id="${client.id}"]`
+      );
+      if (clientNode) {
+        clientsWrap.appendChild(clientNode);
+      }
+    });
+  }
+});
+
+// Сортировка по дате изменения
+document.body.addEventListener("click", (e) => {
+  if (e.target.classList.contains("js-sort-change")) {
+    const sortSvg = document.querySelector(".js-icon-change");
+    const clientsWrap = document.querySelector(".clients__content");
+
+    const isAsc = sortSvg.classList.toggle("icon--transform");
+
+    const sortedClients = [...clientsArray].sort((a, b) => {
+      const dateA = new Date(a.updatedAt);
+      const dateB = new Date(b.updatedAt);
+      return isAsc ? dateB - dateA : dateA - dateB;
+    });
+
+    sortedClients.forEach((client) => {
+      const clientNode = document.querySelector(
+        `.clients__inner[data-id="${client.id}"]`
+      );
+      if (clientNode) {
+        clientsWrap.appendChild(clientNode);
+      }
+    });
+  }
+});
+
+// Фильтрация
+let debounceTimer;
+
+document.querySelector(".header__search").addEventListener("input", () => {
+  clearTimeout(debounceTimer);
+
+  debounceTimer = setTimeout(() => {
+    const inputValue = document
+      .querySelector(".header__search")
+      .value.trim()
+      .toLowerCase();
+    const clients = [...clientsArray];
+
+    if (inputValue === "") {
+      renderClients(clientsArray);
+      return;
+    }
+
+    const filtered = clients.filter((client) => {
+      return (
+        client.name.toLowerCase().includes(inputValue) ||
+        client.surname.toLowerCase().includes(inputValue) ||
+        client.lastName.toLowerCase().includes(inputValue)
+      );
+    });
+
+    document.querySelector(".clients__content").innerHTML = "";
+    renderClients(filtered);
+  }, 300);
+});
+// document.body.querySelector(".header__form").addEventListener("submit", (e) => {
+//   e.preventDefault();
+//   e.stopPropagation();
+//   let clients = [...clientsArray];
+//   console.log(clients);
+
+//   document.body.querySelector(".clients__content").innerHTML = "";
+
+//   const inputValue = document.body.querySelector(".header__search").value;
+
+//   let newList = clients.filter((client, index, arr) => {
+//     return (
+//       client.name === inputValue ||
+//       client.surname === inputValue ||
+//       client.lastname === inputValue
+//     );
+//   });
+
+//   renderClients(newList);
+// });

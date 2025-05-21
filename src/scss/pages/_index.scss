@@ -185,9 +185,16 @@
                 display: none;
             }
         }
+    }
 
-        
+    &__icon {
+        width: 12px;
+        height: 12px;
 
+        &--text {
+            font-size: 10px;
+            color: var(--color-secondary);
+        }
     }
 }
 
