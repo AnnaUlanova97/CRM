@@ -274,10 +274,10 @@ async function renderClients(clientsList) {
 
 // Открытие модалки
 document.body.addEventListener("click", (e) => {
-  if (e.target.classList.contains("js-btn-modal-toggle")) {
-    document.querySelector(".modal-wrap").classList.toggle("open");
+  const modalWrap = document.querySelector(".modal-wrap");
 
-    // let id = e.target.dataset.modal;
+  if (e.target.classList.contains("js-btn-modal-toggle")) {
+    modalWrap.classList.toggle("open");
 
     if (e.target.id === "client-add") {
       document.querySelector(".add-client").classList.add("open");
@@ -292,49 +292,60 @@ document.body.addEventListener("click", (e) => {
     }
   }
 
-  if (
-    e.target === e.target.closest(".modal-wrap") ||
-    e.target === e.target.closest(".modal-wrap__close")
-  ) {
-    document.getElementById("modal-add").classList.remove("open");
-    document.querySelector(".add-client").classList.remove("open");
-    document.getElementById("modal-change").classList.remove("open");
-    document.querySelector(".delete-client").classList.remove("open");
-  }
+  // const openModal = modalWrap.querySelector(".open");
+  // const activeEl = document.activeElement;
+
+  // const isInputActive =
+  //   activeEl &&
+  //   (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
+
+  // const isClickOutsideModal =
+  //   modalWrap.classList.contains("open") &&
+  //   openModal &&
+  //   !openModal.contains(e.target);
+
+  // const isClickOnCloseBtn = e.target.closest(".js-btn-modal-toggle");
+  // console.log(e);
+
+  // if ((isClickOutsideModal && !isInputActive) || isClickOnCloseBtn) {
+  //   modalWrap.classList.remove("open");
+  //   console.log("fff");
+  //   document
+  //     .querySelectorAll(".modal-wrap .open")
+  //     .forEach((el) => el.classList.remove("open"));
+
+  //   resetModal();
+  // }
 });
 
 // Закрытие модалки
 function resetModal() {
   // Судя по всему тут логика сборса модалки перед закрытием, это хорошо что она в функции отдельно. Вызывай эту функцию когда модалка закрывается, только тебе надо придумать как теперь это отслеживать, тк у тебя там нет отдельной кнопки закрытия
   // Я добавила ее туда, где возвращается ответ с сервера во время создания нового клиента
-  document.querySelector(".input__name").value = "";
-  document.querySelector(".input__surname").value = "";
-  document.querySelector(".input__lastname").value = "";
-  document.querySelector(".add-client__id").textContent = "";
+  document.querySelectorAll(".input__name").forEach((elem) => {
+    elem.value = "";
+  });
+  document.querySelectorAll(".input__surname").forEach((elem) => {
+    elem.value = "";
+  });
+  document.querySelectorAll(".input__lastname").forEach((elem) => {
+    elem.value = "";
+  });
+  document.querySelectorAll(".add-client__id").forEach((elem) => {
+    elem.textContent = "";
+  });
   document.querySelectorAll(".contact").forEach((el) => el.remove());
   document.querySelector(".js-modal-btn").style.display = "flex";
   document.querySelector(".add-client__add-contact").classList.remove("open");
-  document.getElementById("modal-add").classList.remove("open");
-  document.getElementById("delete-client").classList.remove("open");
-  document.getElementById("modal-change").classList.remove("open");
-  document.getElementById("add-client").classList.remove("open");
+  document.querySelector(".add-client")?.classList.remove("open");
+  document.querySelector(".change-client")?.classList.remove("open");
+  document.querySelector(".delete-client")?.classList.remove("open");
+  document.querySelector(".modal-wrap")?.classList.remove("open");
   // currentClientId = null;
 }
 
 // Слушатель для добавления еще одного контакта
-document.body.addEventListener("click", (e) => {
-  if (e.target.querySelector(".js-modal-btn")) {
-    e.target.querySelector(".add-client__inner").append(getSelect());
 
-    const arr = [...document.querySelectorAll(".js-contact-input")];
-
-    if (arr.length >= 10) {
-      e.target.style.display = "none";
-    }
-
-    document.querySelector(".add-client__add-contact").classList.add("open");
-  }
-});
 document.querySelector(".js-modal-btn").addEventListener("click", (e) => {
   document.querySelector(".add-client__inner").append(getSelect());
 
