@@ -1,14 +1,23 @@
 .btn-primary {
-  @extend .btn;
-  @include transition((background-color));
+    background-color: var(--color-primary);
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 2px;
+    margin: 0 auto;
+    padding: 12px 35px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 19px;
+    color: var(--color-white);
 
-  background-color: var(--color-primary);
-  padding: 10px;
-  color: var(--color-black);
+      &:hover {
+      background-color: var(--color-primary-hover);
+      }
 
-  &:hover {
-    background-color: color-mix(in oklch, var(--color-primary), var(--color-black) 10%);
+      &:active {
+        background-color: var(--color-primary-active);
+      }
   }
 
 
-}

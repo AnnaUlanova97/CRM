@@ -196,10 +196,8 @@ async function renderClients(clientsList) {
       "js-btn-modal-toggle",
       "js-btn-delete"
     );
-    BTN_CANCEL.dataset.modal = "modal-delete";
-    BTN_CHANGES.dataset.modal = "modal-change";
-    BTN_CHANGES.id = "client-change";
-    BTN_CANCEL.id = "delete-client";
+    BTN_CANCEL.dataset.modal = "delete-client";
+    BTN_CHANGES.dataset.modal = "client-change";
     BTN_CHANGES.dataset.id = client.id;
     BTN_CANCEL.dataset.id = client.id;
 
@@ -276,49 +274,36 @@ async function renderClients(clientsList) {
 document.body.addEventListener("click", (e) => {
   const modalWrap = document.querySelector(".modal-wrap");
 
-  if (e.target.classList.contains("js-btn-modal-toggle")) {
+  if (e.target.classList.contains("js-btn-modal-toggle") || e.target.classList.contains("modal-wrap")) {
     modalWrap.classList.toggle("open");
-
-    if (e.target.id === "client-add") {
-      document.querySelector(".add-client").classList.add("open");
+    resetModal()
+  console.log(e.target);
+    if (e.target.dataset.modal === "client-add") {
+      document.querySelector(".add-client").classList.toggle("open-modal");
     }
 
-    if (e.target.id === "client-change") {
-      document.querySelector(".change-client").classList.add("open");
+    if (e.target.dataset.modal === "client-change") {
+      document.querySelector(".change-client").classList.toggle("open-modal");
     }
 
-    if (e.target.id === "delete-client") {
-      document.querySelector(".delete-client").classList.add("open");
+    if (e.target.dataset.modal === "delete-client") {
+      document.querySelector(".delete-client").classList.toggle("open-modal");
     }
   }
 
-  // const openModal = modalWrap.querySelector(".open");
-  // const activeEl = document.activeElement;
-
-  // const isInputActive =
-  //   activeEl &&
-  //   (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
-
-  // const isClickOutsideModal =
-  //   modalWrap.classList.contains("open") &&
-  //   openModal &&
-  //   !openModal.contains(e.target);
-
-  // const isClickOnCloseBtn = e.target.closest(".js-btn-modal-toggle");
-  // console.log(e);
-
-  // if ((isClickOutsideModal && !isInputActive) || isClickOnCloseBtn) {
-  //   modalWrap.classList.remove("open");
-  //   console.log("fff");
-  //   document
-  //     .querySelectorAll(".modal-wrap .open")
-  //     .forEach((el) => el.classList.remove("open"));
-
-  //   resetModal();
-  // }
+  if (e.target.classList.contains("modal-wrap")) {
+    resetModal()
+  }
 });
 
-// Закрытие модалки
+document.body.addEventListener("click", (e) => {
+  if (e.target.classList.contains("input__name")) {
+
+    e.preventDefault()
+  }
+})
+
+// Ресет модалки
 function resetModal() {
   // Судя по всему тут логика сборса модалки перед закрытием, это хорошо что она в функции отдельно. Вызывай эту функцию когда модалка закрывается, только тебе надо придумать как теперь это отслеживать, тк у тебя там нет отдельной кнопки закрытия
   // Я добавила ее туда, где возвращается ответ с сервера во время создания нового клиента
@@ -336,15 +321,16 @@ function resetModal() {
   });
   document.querySelectorAll(".contact").forEach((el) => el.remove());
   document.querySelector(".js-modal-btn").style.display = "flex";
-  document.querySelector(".add-client__add-contact").classList.remove("open");
-  document.querySelector(".add-client")?.classList.remove("open");
-  document.querySelector(".change-client")?.classList.remove("open");
-  document.querySelector(".delete-client")?.classList.remove("open");
-  document.querySelector(".modal-wrap")?.classList.remove("open");
+  document.querySelector(".add-client__add-contact").classList.remove("open-modal");
+  document.querySelector(".add-client").classList.remove("open-modal");
+  document.querySelector(".change-client").classList.remove("open-modal");
+  document.querySelector(".delete-client").classList.remove("open-modal");
+  document.querySelector(".modal-wrap").classList.remove("open-modal");
+  document.querySelector(".change-client__add-contact").classList.remove("open");
   // currentClientId = null;
 }
 
-// Слушатель для добавления еще одного контакта
+// Слушатель для добавления нового контакта
 
 document.querySelector(".js-modal-btn").addEventListener("click", (e) => {
   document.querySelector(".add-client__inner").append(getSelect());
@@ -386,9 +372,15 @@ document.querySelector(".js-modal-select").addEventListener("click", (e) => {
       input.setAttribute("max-length", "30");
     }
   }
-});
 
-// Отдельный слушатель для закрытия
+  // При удалении всех инпутов, стиль возвращается к первоначальному
+  let container = document.querySelector(".add-client__add-contact");
+
+  if (container.querySelectorAll(".contact").length === 0) {
+    container.classList.remove("open");
+    console.log('dada')
+  }
+});
 
 // Функция создания селекта
 function getSelect() {
@@ -455,6 +447,7 @@ function getSelect() {
 
   BTN_DELETE.addEventListener("click", (e) => {
     INPUT.value = "";
+    CONTACT.remove();
   });
 
   return CONTACT;
@@ -509,8 +502,6 @@ document.body.querySelector(".js-delete").addEventListener("click", (e) => {
   deleteClientApi(id);
 });
 
-// Функция изменения информации о клиенте
-
 // События
 // Слушатель на открытие модалки удаления клиента
 document.body.addEventListener("click", async (e) => {
@@ -535,22 +526,23 @@ let getClientData = {};
 document.body.addEventListener("click", async (e) => {
   if (e.target.classList.contains("js-btn-change")) {
     const btn = document.body.querySelector(".js-save-changes");
+    const btnDelete = document.body.querySelector(".js-save-delete");
     const id = e.target.dataset.id;
     const client = await getClient(id);
 
-    // currentClientId = client.id;
-
-    const modal = document.getElementById("modal-change");
-    modal.classList.add("open");
+    const modal = document.querySelector(".change-client");
 
     const name = modal.querySelector(".input__name");
     const surname = modal.querySelector(".input__surname");
     const lastname = modal.querySelector(".input__lastname");
+    const idText = modal.querySelector(".change-client__id");
 
     btn.dataset.id = id;
+    btnDelete.dataset.id = id;
     name.value = client.name;
     surname.value = client.surname;
     lastname.value = client.lastName;
+    idText.textContent = `ID: ${client.id.slice(0, 6)}`;
 
     const contactWrapper = modal.querySelector(".js-modal-select");
     contactWrapper.innerHTML = "";
@@ -575,18 +567,25 @@ document.body.addEventListener("click", async (e) => {
         } else if (["Vk", "Facebook"].includes(contact.type)) {
           input.setAttribute("type", "url");
         }
-
         contactWrapper.append(contactElem);
       });
-
       document
         .querySelector(".change-client__add-contact")
         .classList.add("open");
     }
-    getClientData.idClient = id;
+    // getClientData.idClient = id;
   }
 });
-
+// слушатель на удаление клиента из модалки change
+document.body.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("js-save-delete")) {
+    const id = e.target.dataset.id;
+    console.log(id);
+    document.querySelector(".change-client").classList.remove("open-modal");
+    document.querySelector(".delete-client").classList.add("open-modal");
+    document.querySelector(".js-delete").dataset.id = id;
+  }
+})
 // Слушатель на кнопку сохранения изменений клиента
 document.body
   .querySelector(".js-save-changes")

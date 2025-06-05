@@ -26,31 +26,8 @@ block content
                     p.clients__headline Контакты
                     p.clients__headline Действия
                 div.clients__content
-                    //- ul.clients__inner.clients__filters
-                    //-     li.clients__item  111112
-                    //-     li.clients__item Скворцов Денис Юрьевич
-                    //-     li.clients__item 21.02.2021 
-                    //-         span.clients__time 12:41
-                    //-     li.clients__item 21.02.2021 
-                    //-         span.clients__time 12:41
-                    //-     li.clients__item
-                    //-         button
-                    //-             +svg-icon('vk', 'table-icon')
-                    //-         button 
-                    //-             +svg-icon('mail', 'table-icon')
-                    //-         button 
-                    //-             +svg-icon('fb', 'table-icon')
-                    //-         button 
-                    //-             +svg-icon('phone', 'table-icon')
-                    //-         button 
-                    //-             +svg-icon('ellipse', 'table-icon--ellipse')
-                    //-     li.clients__item
-                    //-         button.btn-svg.btn-svg--purple Изменить
-                    //-             +svg-icon('actions', 'table-icon')
-                    //-         button.btn-svg.btn-svg--red Удалить
-                    //-             +svg-icon('cancel', 'table-icon_cancel')
-                //- +svg-icon('frame', 'clients__frame')
-            button.btn-secondary.js-btn-modal-toggle(data-modal='modal-add')#client-add
+
+            button.btn-secondary.js-btn-modal-toggle(data-modal='client-add')
                 +svg-icon('btn-add', 'clients__svg')
                 span Добавить клиента
     +modal

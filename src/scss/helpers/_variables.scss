@@ -3,8 +3,10 @@ $imagesPath: '/media/images/';
 :root {
   --color-black: #333333;
   --color-white: #ffffff;
-  --color-primary: #B0B0B0;
-  --color-secondary: #9873FF;
+  --color-primary: #9873FF;
+  --color-primary-hover: #B89EFF;
+  --color-primary-active: #8052FF;
+  --color-secondary: #B0B0B0;
   --color-active: #8052FF;
   --color-error: #F06A4D;
   --color-required: var(--color-error);

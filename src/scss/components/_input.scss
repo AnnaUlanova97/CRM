@@ -4,7 +4,7 @@
     gap: 2px;
     font-size: 10px;
     line-height: 13px;
-    color: var(--color-primary);
+    color: var(--color-secondary);
 
 
 
@@ -33,7 +33,7 @@
             content: "*";
             position: absolute;
             left: 100%;
-            color: var(--color-secondary);
+            color: var(--color-primary);
         }
     }
 }
@@ -58,7 +58,7 @@
         font-size: 14px;
         line-height: 19px;
         border: none;
-        color: var(--color-primary);
+        color: var(--color-secondary);
 
         &:focus-visible {
             outline: none;

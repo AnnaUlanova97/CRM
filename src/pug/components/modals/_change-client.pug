@@ -1,8 +1,8 @@
 mixin change-client
-    div.change-client#modal-change
+    div.change-client
         div.change-client__box
             div.change-client__content
-                button(data-modal="modal-add").modal-wrap__close.js-btn-modal-toggle
+                button(data-modal="client-change").modal-wrap__close.js-btn-modal-toggle
                     +svg-icon('close-form', 'close-icon')
                 h2.change-client__title Изменить данные
                 span.change-client__id
@@ -21,7 +21,7 @@ mixin change-client
                 button.change-client__btn.js-modal-btn Добавить контакт
                     +svg-icon('add_circle_outline', 'add-icon')
             div.change-client__actions
-                button.btn__change.js-save-changes Сохранить
-                button.btn__delete Удалить клиента
+                button.btn-primary.js-save-changes Сохранить
+                button.btn__delete.js-save-delete.js-delete(data-modal='client-delete') Удалить клиента
     
 

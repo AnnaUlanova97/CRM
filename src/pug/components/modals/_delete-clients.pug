@@ -1,11 +1,11 @@
 mixin delete-client
-    div.delete-client#delete-client
+    div.delete-client
         div.delete-client__box
-            button(data-modal="modal-add").modal-wrap__close.js-btn-modal-toggle
+            button(data-modal="delete-client").modal-wrap__close.js-btn-modal-toggle
                 +svg-icon('close-form', 'close-icon')
            
             h2 Удалить клиента
             p Вы&nbsp;действительно хотите удалить данного клиента?
-            button.btn__save.js-delete Удалить
+            button.js-delete.btn-primary Удалить
             button.btn__delete Отмена
                         
