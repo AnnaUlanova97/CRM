@@ -1,6 +1,7 @@
 import "./helpers/globalFunctions.js";
 import BaseModal from "./components/modals/BaseModal.js";
 import Tooltip from "./components/common/Tooltip.js";
+import Inputmask from "inputmask/dist/inputmask";
 
 // info: Инициализация глобальных для приложения компонентов, функций или событий
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -276,8 +277,7 @@ document.body.addEventListener("click", (e) => {
 
   if (e.target.classList.contains("js-btn-modal-toggle") || e.target.classList.contains("modal-wrap")) {
     modalWrap.classList.toggle("open");
-    resetModal()
-  console.log(e.target);
+    // resetModal()
     if (e.target.dataset.modal === "client-add") {
       document.querySelector(".add-client").classList.toggle("open-modal");
     }
@@ -325,62 +325,67 @@ function resetModal() {
   document.querySelector(".add-client").classList.remove("open-modal");
   document.querySelector(".change-client").classList.remove("open-modal");
   document.querySelector(".delete-client").classList.remove("open-modal");
-  document.querySelector(".modal-wrap").classList.remove("open-modal");
+  document.querySelector(".modal-wrap").classList.remove("open");
   document.querySelector(".change-client__add-contact").classList.remove("open");
   // currentClientId = null;
 }
 
 // Слушатель для добавления нового контакта
 
-document.querySelector(".js-modal-btn").addEventListener("click", (e) => {
-  document.querySelector(".add-client__inner").append(getSelect());
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("js-modal-btn")) {
+    e.target.closest(".open-modal").querySelector(".js-modal-select").append(getSelect());
 
-  const arr = [...document.querySelectorAll(".js-contact-input")];
+    const arr = [...document.querySelectorAll(".js-contact-input")];
 
-  if (arr.length >= 10) {
-    e.target.style.display = "none";
+    if (arr.length >= 10) {
+      e.target.style.display = "none";
+    }
+    e.target.closest(".open-modal").querySelector(".js-container").classList.add("open");
   }
-
-  document.querySelector(".add-client__add-contact").classList.add("open");
-});
+})
 
 // События селекта
-document.querySelector(".js-modal-select").addEventListener("click", (e) => {
-  // Открытие/закрытие селекта
-  const content = e.target.closest(".contact__content");
-  if (content) {
-    const parent = content.closest(".contact");
-    parent.querySelector(".contact__select").classList.toggle("open");
-    parent.querySelector(".contact__dropdown").classList.toggle("open");
-  }
-  // Выбор пункта в селекте
-  if (e.target.classList.contains("js-contact-btn")) {
-    const parent = e.target.closest(".contact");
-    const contactBtn = parent.querySelector(".contact__btn");
-    const input = parent.querySelector(".js-contact-input");
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".js-modal-select")) {
+    // Открытие/закрытие селекта
+    const content = e.target.closest(".contact__content");
+    if (content) {
+      const parent = content.closest(".contact");
+      parent.querySelector(".contact__select").classList.toggle("open");
+      parent.querySelector(".contact__dropdown").classList.toggle("open");
+    }
+    // Выбор пункта в селекте
+    if (e.target.classList.contains("js-contact-btn")) {
+      const parent = e.target.closest(".contact");
+      const contactBtn = parent.querySelector(".contact__btn");
+      const input = parent.querySelector(".js-contact-input");
 
-    contactBtn.textContent = e.target.textContent;
+      contactBtn.textContent = e.target.textContent;
 
-    if (e.target.textContent === "Email") {
-      input.setAttribute("type", "email");
-      input.setAttribute("max-length", "30");
-    } else if (e.target.textContent === "Доп. телефон") {
-      input.setAttribute("type", "tel");
-      input.setAttribute("max-length", "16");
-    } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
-      input.setAttribute("type", "url");
-      input.setAttribute("max-length", "30");
+      if (e.target.textContent === "Email") {
+        input.setAttribute("type", "email");
+        input.setAttribute("max-length", "30");
+        Inputmask("email").mask(input);
+      } else if (e.target.textContent === "Доп. телефон") {
+        input.setAttribute("type", "tel");
+        input.setAttribute("max-length", "16");
+        Inputmask("+7 (999) 999-99-99").mask(input);
+      } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
+        input.setAttribute("type", "url");
+        input.setAttribute("max-length", "30");
+      }
+    }
+
+    // При удалении всех инпутов, стиль возвращается к первоначальному
+    let container = document.querySelector(".add-client__add-contact");
+
+    if (container.querySelectorAll(".contact").length === 0) {
+      container.classList.remove("open");
+      console.log('dada')
     }
   }
-
-  // При удалении всех инпутов, стиль возвращается к первоначальному
-  let container = document.querySelector(".add-client__add-contact");
-
-  if (container.querySelectorAll(".contact").length === 0) {
-    container.classList.remove("open");
-    console.log('dada')
-  }
-});
+})
 
 // Функция создания селекта
 function getSelect() {
@@ -484,7 +489,9 @@ document.querySelector(".js-btn-save").addEventListener("click", async (e) => {
     surname.value = "";
     lastname.value = "";
     input.value = "";
+    document.querySelector(".load").style.display = "block";
     await renderTable();
+    document.querySelector(".load").style.display = "none";
     resetModal();
   }
 });
@@ -590,7 +597,7 @@ document.body.addEventListener("click", async (e) => {
 document.body
   .querySelector(".js-save-changes")
   .addEventListener("click", async (e) => {
-    const modal = document.getElementById("modal-change");
+    const modal = document.querySelector(".change-client");
     const nameNew = modal.querySelector(".input__name");
     const surnameNew = modal.querySelector(".input__surname");
     const lastnameNew = modal.querySelector(".input__lastname");
@@ -606,6 +613,7 @@ document.body
       }
     });
 
+    getClientData.idClient = e.target.dataset.id;
     getClientData.name = nameNew.value;
     getClientData.surname = surnameNew.value;
     getClientData.lastName = lastnameNew.value;
@@ -746,6 +754,8 @@ document.querySelector(".header__search").addEventListener("input", () => {
     renderClients(filtered);
   }, 300);
 });
+
+
 // document.body.querySelector(".header__form").addEventListener("submit", (e) => {
 //   e.preventDefault();
 //   e.stopPropagation();

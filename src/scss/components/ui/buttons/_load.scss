@@ -1,0 +1,18 @@
+.load {
+  display: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid #cccccc;
+  border-radius: 50%;
+  border-left-color: transparent;
+  animation: move 1.5s infinite linear;
+}
+
+@keyframes move {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
