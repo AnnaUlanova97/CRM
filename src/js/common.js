@@ -1,7 +1,7 @@
 import "./helpers/globalFunctions.js";
 import BaseModal from "./components/modals/BaseModal.js";
 import Tooltip from "./components/common/Tooltip.js";
-import Inputmask from "inputmask/dist/inputmask";
+// import Inputmask from "inputmask/dist/inputmask";
 
 // info: Инициализация глобальных для приложения компонентов, функций или событий
 document.addEventListener("DOMContentLoaded", (event) => {
