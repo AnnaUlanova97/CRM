@@ -1,7 +1,7 @@
 import "./helpers/globalFunctions.js";
 import BaseModal from "./components/modals/BaseModal.js";
 import Tooltip from "./components/common/Tooltip.js";
-// import Inputmask from "inputmask/dist/inputmask";
+import Inputmask from "inputmask/dist/inputmask.es6.js";
 
 // info: Инициализация глобальных для приложения компонентов, функций или событий
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -84,23 +84,26 @@ async function getClient(id) {
 }
 
 async function saveClient({ name, surname, lastname, contacts }) {
-  const response = await fetch("http://localhost:3000/api/clients", {
+  const data = {
+    // * обязательное поле, имя клиента
+    name: name,
+    // * обязательное поле, фамилия клиента
+    surname: surname,
+    // необязательное поле, отчество клиента
+    lastName: lastname,
+    // контакты - необязательное поле, массив контактов
+    // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
+    contacts: contacts,
+  }
+  return await fetch("http://localhost:3000/api/clients", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      // * обязательное поле, имя клиента
-      name: name.value,
-      // * обязательное поле, фамилия клиента
-      surname: surname.value,
-      // необязательное поле, отчество клиента
-      lastName: lastname.value,
-      // контакты - необязательное поле, массив контактов
-      // каждый объект в массиве (если он передан) должен содержать непустые свойства type и value
-      contacts: contacts,
-    }),
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data),
+  }).then((response) => {
+    return response.json()
+  }).then((data) => {
+    return data;
   });
-  const data = await response.json();
-  return data;
 }
 
 async function deleteClientApi(idClient) {
@@ -366,6 +369,7 @@ document.addEventListener("click", (e) => {
       if (e.target.textContent === "Email") {
         input.setAttribute("type", "email");
         input.setAttribute("max-length", "30");
+        console.log(13);
         Inputmask("email").mask(input);
       } else if (e.target.textContent === "Доп. телефон") {
         input.setAttribute("type", "tel");
@@ -478,7 +482,7 @@ document.querySelector(".js-btn-save").addEventListener("click", async (e) => {
     }
   });
 
-  const client = await saveClient({ name, surname, lastname, contacts });
+  const client = await saveClient({ name: name.value.trim(), surname: surname.value.trim(), lastname: lastname.value.trim(), contacts: contacts });
 
   if (client) {
     document.querySelectorAll(".contact").forEach((el) => el.remove());

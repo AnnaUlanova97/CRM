@@ -7,9 +7,9 @@ class HomePage extends BasePage {
 
         this.page = page
 
-        this.Form = new BaseForm({
-            form: this.page.querySelector('.js-form')
-        })
+        // this.Form = new BaseForm({
+        //     form: this.page.querySelector('.js-form')
+        // })
     }
 }
 
