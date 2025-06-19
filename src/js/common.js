@@ -280,7 +280,9 @@ document.body.addEventListener("click", (e) => {
 
   if (e.target.classList.contains("js-btn-modal-toggle") || e.target.classList.contains("modal-wrap")) {
     modalWrap.classList.toggle("open");
-    // resetModal()
+    if (!modalWrap.classList.contains("open")) {
+      resetModal();
+    }
     if (e.target.dataset.modal === "client-add") {
       document.querySelector(".add-client").classList.toggle("open-modal");
     }
@@ -329,8 +331,7 @@ function resetModal() {
   document.querySelector(".change-client").classList.remove("open-modal");
   document.querySelector(".delete-client").classList.remove("open-modal");
   document.querySelector(".modal-wrap").classList.remove("open");
-  document.querySelector(".change-client__add-contact").classList.remove("open");
-  // currentClientId = null;
+  document.querySelectorAll(".js-container").forEach((el) => el.classList.remove("open"));
 }
 
 // Слушатель для добавления нового контакта
@@ -348,47 +349,61 @@ document.addEventListener("click", (e) => {
   }
 })
 
-// События селекта
+// Слушатель на кнопку удаления инпута контактных данных
 document.addEventListener("click", (e) => {
-  if (e.target.closest(".js-modal-select")) {
-    // Открытие/закрытие селекта
-    const content = e.target.closest(".contact__content");
-    if (content) {
-      const parent = content.closest(".contact");
-      parent.querySelector(".contact__select").classList.toggle("open");
-      parent.querySelector(".contact__dropdown").classList.toggle("open");
-    }
-    // Выбор пункта в селекте
-    if (e.target.classList.contains("js-contact-btn")) {
-      const parent = e.target.closest(".contact");
-      const contactBtn = parent.querySelector(".contact__btn");
-      const input = parent.querySelector(".js-contact-input");
-
-      contactBtn.textContent = e.target.textContent;
-
-      if (e.target.textContent === "Email") {
-        input.setAttribute("type", "email");
-        input.setAttribute("max-length", "30");
-        console.log(13);
-        Inputmask("email").mask(input);
-      } else if (e.target.textContent === "Доп. телефон") {
-        input.setAttribute("type", "tel");
-        input.setAttribute("max-length", "16");
-        Inputmask("+7 (999) 999-99-99").mask(input);
-      } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
-        input.setAttribute("type", "url");
-        input.setAttribute("max-length", "30");
-      }
-    }
-
-    // При удалении всех инпутов, стиль возвращается к первоначальному
-    let container = document.querySelector(".add-client__add-contact");
-
-    if (container.querySelectorAll(".contact").length === 0) {
-      container.classList.remove("open");
-      console.log('dada')
+  if (e.target.classList.contains("js-contact-delete")) {
+    const arr = [...document.querySelectorAll(".js-contact-input")];
+    console.log('ppp')
+    if (arr.length < 1) {
+      document.querySelector(".js-container").classList.remove("open");
     }
   }
+})
+
+// События селекта
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".js-modal-select");
+  const content = e.target.closest(".contact__content")
+  if (btn) {
+    const parent = content.closest(".contact");
+    parent.querySelector(".contact__content").classList.toggle("open");
+    // parent.querySelector(".contact__dropdown").classList.toggle("open");
+  }
+
+  // if (e.target.classList.contains("js-modal-select") && ) {}
+
+  // const content = e.target.closest(".contact__content");
+  // if (e.target.closest(".js-modal-select")) {
+  //   // Открытие/закрытие селекта
+  //
+  //   if (content) {
+  //     const parent = content.closest(".contact");
+  //     parent.querySelector(".contact__select").classList.toggle("open");
+  //     parent.querySelector(".contact__dropdown").classList.toggle("open");
+  //   }
+  //
+  //   // Выбор пункта в селекте
+  //   if (e.target.classList.contains("js-contact-btn")) {
+  //     const parent = e.target.closest(".contact");
+  //     const contactBtn = parent.querySelector(".contact__btn");
+  //     const input = parent.querySelector(".js-contact-input");
+  //
+  //     contactBtn.textContent = e.target.textContent;
+  //
+  //     if (e.target.textContent === "Email") {
+  //       input.setAttribute("type", "email");
+  //       input.setAttribute("max-length", "30");
+  //       Inputmask("email").mask(input);
+  //     } else if (e.target.textContent === "Доп. телефон") {
+  //       input.setAttribute("type", "tel");
+  //       input.setAttribute("max-length", "16");
+  //       Inputmask("+7 (999) 999-99-99").mask(input);
+  //     } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
+  //       input.setAttribute("type", "url");
+  //       input.setAttribute("max-length", "30");
+  //     }
+  //   }
+  // }
 })
 
 // Функция создания селекта
@@ -419,7 +434,7 @@ function getSelect() {
   CONTACT_SELECT.classList.add("contact__select");
   BUTTONS.forEach((i) => i.classList.add("js-contact-btn"));
   INPUT.classList.add("contact__input", "js-contact-input");
-  BTN_DELETE.classList.add("contact__delete");
+  BTN_DELETE.classList.add("contact__delete", 'js-contact-delete');
 
   CONTACT_BTN.textContent = "Телефон";
   CONTACT_BTN_TEL2.textContent = "Доп. телефон";
@@ -447,7 +462,7 @@ function getSelect() {
 
   // Появление кнопки удалить, при вводе символов в инпут
   INPUT.oninput = function (e) {
-    if (INPUT.value.length > 1) {
+    if (INPUT.value.length > 0) {
       BTN_DELETE.style.display = "flex";
     } else {
       BTN_DELETE.style.display = "none";
@@ -510,6 +525,8 @@ document.body.querySelector(".js-delete").addEventListener("click", (e) => {
     CLIENT.remove();
     document.querySelector(".modal-wrap").classList.remove("open");
   }
+
+  resetModal();
   deleteClientApi(id);
 });
 
