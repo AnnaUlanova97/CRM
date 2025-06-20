@@ -48,6 +48,7 @@
     "axios": "^1.5.0",
     "inputmask": "^5.0.9",
     "swiper": "^10.1.0",
-    "tippy.js": "^6.3.7"
+    "tippy.js": "^6.3.7",
+    "validator": "^13.15.15"
   }
 }

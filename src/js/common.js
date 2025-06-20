@@ -2,6 +2,7 @@ import "./helpers/globalFunctions.js";
 import BaseModal from "./components/modals/BaseModal.js";
 import Tooltip from "./components/common/Tooltip.js";
 import Inputmask from "inputmask/dist/inputmask.es6.js";
+import validator from "validator";
 
 // info: Инициализация глобальных для приложения компонентов, функций или событий
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -361,55 +362,44 @@ document.addEventListener("click", (e) => {
 
 // События селекта
 document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".js-modal-select");
   const content = e.target.closest(".contact__content")
 
-  if(!e.target.closest(".contact__select")) {
-    console.log('Нажали не внутри')
-  } else {
-    console.log('Нажали внутри')
-  }
+  // Закрытие селекта по клику вне его области
 
-  if (btn) {
+  if (e.target.closest(".js-modal-select")) {
     const parent = content.closest(".contact");
     parent.querySelector(".contact__content").classList.toggle("open");
-    // parent.querySelector(".contact__dropdown").classList.toggle("open");
+
+    // Выбор пункта в селекте
+    if (e.target.classList.contains("js-contact-btn")) {
+      const parent = e.target.closest(".contact");
+      const contactBtn = parent.querySelector(".contact__btn");
+      const input = parent.querySelector(".js-contact-input");
+
+      contactBtn.textContent = e.target.textContent;
+      console.log(document.querySelectorAll('input[type="tel"]'));
+      document.querySelectorAll('input[type="tel"]').forEach((input) => {
+        Inputmask("+7 (999) 999-99-99").mask(input);
+      });
+
+      if (e.target.textContent === "Email") {
+        input.setAttribute("type", "email");
+        input.setAttribute("max-length", "30");
+      } else if (e.target.textContent === "Доп. телефон") {
+        console.log('2')
+        input.setAttribute("type", "tel");
+        input.setAttribute("max-length", "16");
+        Inputmask("+7 (999) 999-99-99").mask(input);
+      } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
+        input.setAttribute("type", "url");
+        input.setAttribute("max-length", "30");
+      }
+    }
   }
 
-  // if (e.target.classList.contains("js-modal-select") && ) {}
-
-  // const content = e.target.closest(".contact__content");
-  // if (e.target.closest(".js-modal-select")) {
-  //   // Открытие/закрытие селекта
-  //
-  //   if (content) {
-  //     const parent = content.closest(".contact");
-  //     parent.querySelector(".contact__select").classList.toggle("open");
-  //     parent.querySelector(".contact__dropdown").classList.toggle("open");
-  //   }
-  //
-  //   // Выбор пункта в селекте
-  //   if (e.target.classList.contains("js-contact-btn")) {
-  //     const parent = e.target.closest(".contact");
-  //     const contactBtn = parent.querySelector(".contact__btn");
-  //     const input = parent.querySelector(".js-contact-input");
-  //
-  //     contactBtn.textContent = e.target.textContent;
-  //
-  //     if (e.target.textContent === "Email") {
-  //       input.setAttribute("type", "email");
-  //       input.setAttribute("max-length", "30");
-  //       Inputmask("email").mask(input);
-  //     } else if (e.target.textContent === "Доп. телефон") {
-  //       input.setAttribute("type", "tel");
-  //       input.setAttribute("max-length", "16");
-  //       Inputmask("+7 (999) 999-99-99").mask(input);
-  //     } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
-  //       input.setAttribute("type", "url");
-  //       input.setAttribute("max-length", "30");
-  //     }
-  //   }
-  // }
+  if(!e.target.closest(".contact__select") && !e.target.closest(".contact__content")) {
+    document.body.querySelector(".contact__content")?.classList.remove("open");
+  }
 })
 
 // Функция создания селекта
@@ -484,16 +474,48 @@ function getSelect() {
 }
 
 // Функция слушателя на добавление нового клиента в таблицу
-document.querySelector(".js-btn-save").addEventListener("click", async (e) => {
+const form = document.querySelector('.js-form-add')
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
   const name = document.querySelector(".input__name");
   const surname = document.querySelector(".input__surname");
   const lastname = document.querySelector(".input__lastname");
   const input = document.querySelectorAll(".js-contact-input");
   const contactBox = document.querySelectorAll(".contact");
 
-  // Создаем массив контактов
-  const contacts = [];
+  let isValid = true;
 
+  // Валидация
+  if (name.value.trim().length < 2) {
+    isValid = false;
+    name.classList.add("input__error");
+  }
+
+  if (surname.value.trim().length < 2) {
+      isValid = false;
+    surname.classList.add("input__error");
+  }
+
+  contactBox.forEach((div) => {
+    const type = div.querySelector(".contact__btn").textContent.trim();
+    const value = div.querySelector(".js-contact-input").value.trim();
+
+    if (type === "Телефон" || type === "Доп. телефон") {
+      const phoneRegex = /^\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}$/;
+      if (!phoneRegex.test(value)) {
+        isValid = false;
+        div.classList.add("input__error");
+      }
+    }
+  });
+
+  if (!isValid) return;
+
+  // === СОХРАНЕНИЕ КЛИЕНТА ===
+  const contacts = [];
   contactBox.forEach((div) => {
     const type = div.querySelector(".contact__btn").textContent.trim();
     const value = div.querySelector(".js-contact-input").value.trim();
@@ -503,7 +525,12 @@ document.querySelector(".js-btn-save").addEventListener("click", async (e) => {
     }
   });
 
-  const client = await saveClient({ name: name.value.trim(), surname: surname.value.trim(), lastname: lastname.value.trim(), contacts: contacts });
+  const client = await saveClient({
+    name: name.value.trim(),
+    surname: surname.value.trim(),
+    lastname: lastname.value.trim(),
+    contacts: contacts,
+  });
 
   if (client) {
     document.querySelectorAll(".contact").forEach((el) => el.remove());
@@ -521,20 +548,6 @@ document.querySelector(".js-btn-save").addEventListener("click", async (e) => {
   }
 });
 
-// Функция удаления клиента из таблицы
-document.body.querySelector(".js-delete").addEventListener("click", (e) => {
-  const id = e.target.dataset.id;
-  const CLIENT = document
-    .querySelector(`[data-id='${id}']`)
-    .closest(".clients__inner");
-  if (CLIENT) {
-    CLIENT.remove();
-    document.querySelector(".modal-wrap").classList.remove("open");
-  }
-
-  resetModal();
-  deleteClientApi(id);
-});
 
 // События
 // Слушатель на открытие модалки удаления клиента
@@ -545,6 +558,24 @@ document.body.addEventListener("click", async (e) => {
     btn.dataset.id = client;
   }
 });
+
+// Слушатель удаления клиента из таблицы
+document.body.addEventListener("click", (e) => {
+  if (e.target.classList.contains("js-delete")) {
+    const id = e.target.dataset.id;
+    const CLIENT = document
+        .querySelector(`[data-id='${id}']`)
+        .closest(".clients__inner");
+    if (CLIENT) {
+      CLIENT.remove();
+      document.querySelector(".modal-wrap").classList.remove("open");
+    }
+
+    resetModal();
+    deleteClientApi(id);
+  }
+})
+
 // слушатель на показ всех контактов
 document.body.addEventListener("click", (e) => {
   // Так лучше? сделала два условия
@@ -620,9 +651,8 @@ document.body.addEventListener("click", async (e) => {
   }
 })
 // Слушатель на кнопку сохранения изменений клиента
-document.body
-  .querySelector(".js-save-changes")
-  .addEventListener("click", async (e) => {
+document.body.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("js-save-changes")) {
     const modal = document.querySelector(".change-client");
     const nameNew = modal.querySelector(".input__name");
     const surnameNew = modal.querySelector(".input__surname");
@@ -648,7 +678,9 @@ document.body
     await changeClient(getClientData);
     resetModal();
     await renderTable();
-  });
+  }
+})
+
 
 // Сортировка по ID
 document.body.addEventListener("click", (e) => {
