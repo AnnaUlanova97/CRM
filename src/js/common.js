@@ -79,8 +79,7 @@ async function getClientsList() {
 
 async function getClient(id) {
   const response = await fetch(`http://localhost:3000/api/clients/${id}`);
-  const data = await response.json();
-  return data;
+  return await response.json();
 }
 
 async function saveClient({ name, surname, lastname, contacts }) {
@@ -364,6 +363,13 @@ document.addEventListener("click", (e) => {
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".js-modal-select");
   const content = e.target.closest(".contact__content")
+
+  if(!e.target.closest(".contact__select")) {
+    console.log('Нажали не внутри')
+  } else {
+    console.log('Нажали внутри')
+  }
+
   if (btn) {
     const parent = content.closest(".contact");
     parent.querySelector(".contact__content").classList.toggle("open");
@@ -608,7 +614,6 @@ document.body.addEventListener("click", async (e) => {
 document.body.addEventListener("click", async (e) => {
   if (e.target.classList.contains("js-save-delete")) {
     const id = e.target.dataset.id;
-    console.log(id);
     document.querySelector(".change-client").classList.remove("open-modal");
     document.querySelector(".delete-client").classList.add("open-modal");
     document.querySelector(".js-delete").dataset.id = id;
