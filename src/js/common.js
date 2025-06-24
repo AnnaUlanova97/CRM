@@ -61,6 +61,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 //
 
+let allClients = [];
+
 function svgCreate(id, classIcon = "") {
   return `<svg class="icon ${classIcon}">
     <use xlink:href="#${id}"></use>
@@ -77,6 +79,8 @@ async function getClientsList() {
       return data;
     });
 }
+
+allClients = await getClientsList();
 
 async function getClient(id) {
   const response = await fetch(`http://localhost:3000/api/clients/${id}`);
@@ -166,9 +170,10 @@ let clientsArray = [];
 
 // Функция рендера страницы
 async function renderClients(clientsList) {
-  clientsArray = clientsList;
 
   const CLIENT_CONTENT = document.querySelector(".clients__content");
+
+  CLIENT_CONTENT.innerHTML = "";
 
   clientsList.forEach((client) => {
     const CLIENT = document.createElement("ul");
@@ -301,13 +306,6 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
-document.body.addEventListener("click", (e) => {
-  if (e.target.classList.contains("input__name")) {
-
-    e.preventDefault()
-  }
-})
-
 // Ресет модалки
 function resetModal() {
   // Судя по всему тут логика сборса модалки перед закрытием, это хорошо что она в функции отдельно. Вызывай эту функцию когда модалка закрывается, только тебе надо придумать как теперь это отслеживать, тк у тебя там нет отдельной кнопки закрытия
@@ -331,6 +329,7 @@ function resetModal() {
   document.querySelector(".change-client").classList.remove("open-modal");
   document.querySelector(".delete-client").classList.remove("open-modal");
   document.querySelector(".modal-wrap").classList.remove("open");
+  document.querySelectorAll(".js-container").forEach((el) => el.classList.remove("open"));
   document.querySelectorAll(".js-container").forEach((el) => el.classList.remove("open"));
 }
 
@@ -371,25 +370,22 @@ document.addEventListener("click", (e) => {
     parent.querySelector(".contact__content").classList.toggle("open");
 
     // Выбор пункта в селекте
-    if (e.target.classList.contains("js-contact-btn")) {
+    if (e.target.classList.contains("js-contact-btn")){
       const parent = e.target.closest(".contact");
       const contactBtn = parent.querySelector(".contact__btn");
       const input = parent.querySelector(".js-contact-input");
 
+      input.classList.remove("input__error");
+      // input.inputmask.remove();
+
       contactBtn.textContent = e.target.textContent;
-      console.log(document.querySelectorAll('input[type="tel"]'));
-      document.querySelectorAll('input[type="tel"]').forEach((input) => {
-        Inputmask("+7 (999) 999-99-99").mask(input);
-      });
 
       if (e.target.textContent === "Email") {
-        input.setAttribute("type", "email");
+        input.setAttribute("type", "text");
         input.setAttribute("max-length", "30");
       } else if (e.target.textContent === "Доп. телефон") {
-        console.log('2')
         input.setAttribute("type", "tel");
         input.setAttribute("max-length", "16");
-        Inputmask("+7 (999) 999-99-99").mask(input);
       } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
         input.setAttribute("type", "url");
         input.setAttribute("max-length", "30");
@@ -416,6 +412,8 @@ function getSelect() {
   const INPUT = document.createElement("input");
   const BTN_DELETE = document.createElement("div");
 
+  Inputmask("+7 (999) 999-99-99").mask(INPUT);
+
   const BUTTONS = [
     CONTACT_BTN_TEL2,
     CONTACT_BTN_EMAIL,
@@ -429,6 +427,9 @@ function getSelect() {
   CONTACT_BTN.classList.add("contact__btn");
   CONTACT_SELECT.classList.add("contact__select");
   BUTTONS.forEach((i) => i.classList.add("js-contact-btn"));
+  BUTTONS.forEach((btn) => {
+    btn.type = "button";
+  });
   INPUT.classList.add("contact__input", "js-contact-input");
   BTN_DELETE.classList.add("contact__delete", 'js-contact-delete');
 
@@ -485,6 +486,7 @@ form.addEventListener('submit', async (e) => {
   const lastname = document.querySelector(".input__lastname");
   const input = document.querySelectorAll(".js-contact-input");
   const contactBox = document.querySelectorAll(".contact");
+  // const value = input.value.trim();
 
   let isValid = true;
 
@@ -492,11 +494,15 @@ form.addEventListener('submit', async (e) => {
   if (name.value.trim().length < 2) {
     isValid = false;
     name.classList.add("input__error");
+  } else {
+    name.classList.remove("input__error");
   }
 
   if (surname.value.trim().length < 2) {
       isValid = false;
     surname.classList.add("input__error");
+  } else {
+    surname.classList.remove("input__error");
   }
 
   contactBox.forEach((div) => {
@@ -508,13 +514,14 @@ form.addEventListener('submit', async (e) => {
       if (!phoneRegex.test(value)) {
         isValid = false;
         div.classList.add("input__error");
+      } else {
+        div.classList.remove("input__error");
       }
     }
   });
 
   if (!isValid) return;
 
-  // === СОХРАНЕНИЕ КЛИЕНТА ===
   const contacts = [];
   contactBox.forEach((div) => {
     const type = div.querySelector(".contact__btn").textContent.trim();
@@ -638,7 +645,6 @@ document.body.addEventListener("click", async (e) => {
         .querySelector(".change-client__add-contact")
         .classList.add("open");
     }
-    // getClientData.idClient = id;
   }
 });
 // слушатель на удаление клиента из модалки change
@@ -707,7 +713,8 @@ document.body.addEventListener("click", (e) => {
 
 // Сортировка по имени
 document.body.addEventListener("click", (e) => {
-  if (e.target.classList.contains("js-sort-name")) {
+  const button = e.target.closest('.js-sort-name');
+  if (button) {
     const sortSvg = document.querySelector(".js-icon-name");
     const clientsWrap = document.querySelector(".clients__content");
 
@@ -785,52 +792,28 @@ document.body.addEventListener("click", (e) => {
 // Фильтрация
 let debounceTimer;
 
-document.querySelector(".header__search").addEventListener("input", () => {
+document.querySelector(".header__search").addEventListener("input", async () => {
   clearTimeout(debounceTimer);
 
   debounceTimer = setTimeout(() => {
-    const inputValue = document
-      .querySelector(".header__search")
-      .value.trim()
-      .toLowerCase();
-    const clients = [...clientsArray];
+    const input = document.querySelector(".header__search");
+    const inputValue = input.value.trim().toLowerCase();
+    const clientsContainer = document.querySelector(".clients__content");
 
     if (inputValue === "") {
-      renderClients(clientsArray);
-      return;
+      console.log(1)
+      // clientsContainer.innerHTML = "";
+      renderClients(allClients);
+      console.log(allClients);
     }
+    const filtered = allClients.filter(({ name, surname, lastName }) =>
+        [name, surname, lastName].some((val) =>
+            val.toLowerCase().includes(inputValue)
+        )
+    );
 
-    const filtered = clients.filter((client) => {
-      return (
-        client.name.toLowerCase().includes(inputValue) ||
-        client.surname.toLowerCase().includes(inputValue) ||
-        client.lastName.toLowerCase().includes(inputValue)
-      );
-    });
-
-    document.querySelector(".clients__content").innerHTML = "";
     renderClients(filtered);
   }, 300);
 });
 
 
-// document.body.querySelector(".header__form").addEventListener("submit", (e) => {
-//   e.preventDefault();
-//   e.stopPropagation();
-//   let clients = [...clientsArray];
-//   console.log(clients);
-
-//   document.body.querySelector(".clients__content").innerHTML = "";
-
-//   const inputValue = document.body.querySelector(".header__search").value;
-
-//   let newList = clients.filter((client, index, arr) => {
-//     return (
-//       client.name === inputValue ||
-//       client.surname === inputValue ||
-//       client.lastname === inputValue
-//     );
-//   });
-
-//   renderClients(newList);
-// });
