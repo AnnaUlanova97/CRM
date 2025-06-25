@@ -803,7 +803,6 @@ document.querySelector(".header__search").addEventListener("input", async () => 
     const clientsContainer = document.querySelector(".clients__content");
 
     if (inputValue === "") {
-      console.log(1)
       // clientsContainer.innerHTML = "";
       renderClients(allClients);
       console.log(allClients);
