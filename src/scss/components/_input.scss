@@ -7,12 +7,6 @@
     color: var(--color-secondary);
 
 
-
-    &__error {
-        outline: 2px solid var(--color-error);
-    }
-
-
     & input {
         padding: 5px;
         font-size: 14px;
@@ -26,6 +20,10 @@
         &:focus-visible {
             outline: none;
         }
+    }
+
+    &__error {
+        border-color: red !important;
     }
 
 

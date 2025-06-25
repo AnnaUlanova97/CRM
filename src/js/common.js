@@ -365,7 +365,7 @@ document.addEventListener("click", (e) => {
 
   // Закрытие селекта по клику вне его области
 
-  if (e.target.closest(".js-modal-select")) {
+  if (e.target.closest(".contact__content")) {
     const parent = content.closest(".contact");
     parent.querySelector(".contact__content").classList.toggle("open");
 
@@ -427,6 +427,8 @@ function getSelect() {
   CONTACT_BTN.classList.add("contact__btn");
   CONTACT_SELECT.classList.add("contact__select");
   BUTTONS.forEach((i) => i.classList.add("js-contact-btn"));
+
+  console.log(1)
   BUTTONS.forEach((btn) => {
     btn.type = "button";
   });
