@@ -352,7 +352,6 @@ document.addEventListener("click", (e) => {
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("js-contact-delete")) {
     const arr = [...document.querySelectorAll(".js-contact-input")];
-    console.log('ppp')
     if (arr.length < 1) {
       document.querySelector(".js-container").classList.remove("open");
     }
@@ -365,31 +364,37 @@ document.addEventListener("click", (e) => {
 
   // Закрытие селекта по клику вне его области
 
-  if (e.target.closest(".contact__content")) {
+  if (e.target.closest(".js-contact-dropdown")) {
     const parent = content.closest(".contact");
     parent.querySelector(".contact__content").classList.toggle("open");
+  }
 
-    // Выбор пункта в селекте
-    if (e.target.classList.contains("js-contact-btn")){
-      const parent = e.target.closest(".contact");
-      const contactBtn = parent.querySelector(".contact__btn");
-      const input = parent.querySelector(".js-contact-input");
+  // Выбор пункта в селекте
+  if (e.target.classList.contains("js-contact-btn")){
+    const parent = e.target.closest(".contact");
+    const contactBtn = parent.querySelector(".contact__btn");
+    const input = parent.querySelector(".js-contact-input");
 
-      input.classList.remove("input__error");
-      // input.inputmask.remove();
+    input.classList.remove("input__error");
+    // input.inputmask.remove();
 
-      contactBtn.textContent = e.target.textContent;
+    contactBtn.textContent = e.target.textContent;
 
-      if (e.target.textContent === "Email") {
-        input.setAttribute("type", "text");
-        input.setAttribute("max-length", "30");
-      } else if (e.target.textContent === "Доп. телефон") {
-        input.setAttribute("type", "tel");
-        input.setAttribute("max-length", "16");
-      } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
-        input.setAttribute("type", "url");
-        input.setAttribute("max-length", "30");
-      }
+    if (e.target.textContent === "Email") {
+      input.value = "";
+      input.inputmask.remove();
+      input.setAttribute("type", "text");
+      input.setAttribute("max-length", "30");
+    } else if (e.target.textContent === "Доп. телефон") {
+      input.value = "";
+      Inputmask("+7 (999) 999-99-99").mask(input);
+      input.setAttribute("type", "tel");
+      input.setAttribute("max-length", "16");
+    } else if (["Vk", "Facebook"].includes(e.target.textContent)) {
+      input.value = "";
+      input.inputmask.remove();
+      input.setAttribute("type", "url");
+      input.setAttribute("max-length", "30");
     }
   }
 
@@ -411,9 +416,6 @@ function getSelect() {
   const CONTACT_BTN_VK = document.createElement("button");
   const INPUT = document.createElement("input");
   const BTN_DELETE = document.createElement("div");
-
-  Inputmask("+7 (999) 999-99-99").mask(INPUT);
-
   const BUTTONS = [
     CONTACT_BTN_TEL2,
     CONTACT_BTN_EMAIL,
@@ -421,14 +423,14 @@ function getSelect() {
     CONTACT_BTN_VK,
   ];
 
+
+
   CONTACT.classList.add("contact");
   CONTACT_CONTENT.classList.add("contact__content");
-  CONTACT_DROPDOWN.classList.add("contact__dropdown");
+  CONTACT_DROPDOWN.classList.add("contact__dropdown", 'js-contact-dropdown');
   CONTACT_BTN.classList.add("contact__btn");
   CONTACT_SELECT.classList.add("contact__select");
   BUTTONS.forEach((i) => i.classList.add("js-contact-btn"));
-
-  console.log(1)
   BUTTONS.forEach((btn) => {
     btn.type = "button";
   });
@@ -472,90 +474,100 @@ function getSelect() {
     INPUT.value = "";
     CONTACT.remove();
   });
-
+  // if (INPUT.value === "") {
+  //     console.log(2)
+  //     Inputmask("+7 (999) 999-99-99").mask(INPUT);
+  //   }
+  // if (INPUT.closest(".change-client__inner")) {
+  //   console.log(1)
+  // } else {
+  //   console.log(2);
+  // }
   return CONTACT;
 }
 
-// Функция слушателя на добавление нового клиента в таблицу
-const form = document.querySelector('.js-form-add')
+// Функция ошибки валидации
+function setInputError(input) {
+  input.classList.add("input__error");
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  const removeError = () => {
+    input.classList.remove("input__error");
+    input.removeEventListener("input", removeError);
+  };
 
-  const name = document.querySelector(".input__name");
-  const surname = document.querySelector(".input__surname");
-  const lastname = document.querySelector(".input__lastname");
-  const input = document.querySelectorAll(".js-contact-input");
-  const contactBox = document.querySelectorAll(".contact");
-  // const value = input.value.trim();
+  input.addEventListener("input", removeError);
+}
 
-  let isValid = true;
+// Слушатель на добавление нового клиента в таблицу
+document.body.addEventListener("click", async (e) => {
+  if (e.target.closest(".js-btn-save")) {
+    const name = document.querySelector(".input__name");
+    const surname = document.querySelector(".input__surname");
+    const lastname = document.querySelector(".input__lastname");
+    const input = document.querySelectorAll(".js-contact-input");
+    const contactBox = document.querySelectorAll(".contact");
 
-  // Валидация
-  if (name.value.trim().length < 2) {
-    isValid = false;
-    name.classList.add("input__error");
-  } else {
-    name.classList.remove("input__error");
-  }
+    let isValid = true;
 
-  if (surname.value.trim().length < 2) {
+    // Валидация
+    if (name.value.trim().length < 2) {
       isValid = false;
-    surname.classList.add("input__error");
-  } else {
-    surname.classList.remove("input__error");
-  }
+      setInputError(name);
+    }
 
-  contactBox.forEach((div) => {
-    const type = div.querySelector(".contact__btn").textContent.trim();
-    const value = div.querySelector(".js-contact-input").value.trim();
+    if (surname.value.trim().length < 2) {
+      isValid = false;
+      setInputError(surname);
+    }
 
-    if (type === "Телефон" || type === "Доп. телефон") {
-      const phoneRegex = /^\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}$/;
-      if (!phoneRegex.test(value)) {
-        isValid = false;
-        div.classList.add("input__error");
-      } else {
-        div.classList.remove("input__error");
+    contactBox.forEach((div) => {
+      const type = div.querySelector(".contact__btn").textContent.trim();
+      const value = div.querySelector(".js-contact-input").value.trim();
+
+      if (type === "Телефон" || type === "Доп. телефон") {
+        const phoneRegex = /^\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}$/;
+        if (!phoneRegex.test(value)) {
+          isValid = false;
+          setInputError(div);
+        }
       }
+
+      if (type === "Email") {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          isValid = false;
+          setInputError(div);
+        }
+      }
+    });
+
+    if (!isValid) return;
+
+    const contacts = [];
+    contactBox.forEach((div) => {
+      const type = div.querySelector(".contact__btn").textContent.trim();
+      const value = div.querySelector(".js-contact-input").value.trim();
+
+      if (value) {
+        contacts.push({ type, value });
+      }
+    });
+
+    const client = await saveClient({
+      name: name.value.trim(),
+      surname: surname.value.trim(),
+      lastname: lastname.value.trim(),
+      contacts: contacts,
+    });
+
+    if (client) {
+      document.querySelector(".load").style.display = "block";
+      await renderTable();
+      document.querySelector(".load").style.display = "none";
+      resetModal();
     }
-  });
-
-  if (!isValid) return;
-
-  const contacts = [];
-  contactBox.forEach((div) => {
-    const type = div.querySelector(".contact__btn").textContent.trim();
-    const value = div.querySelector(".js-contact-input").value.trim();
-
-    if (value) {
-      contacts.push({ type, value });
-    }
-  });
-
-  const client = await saveClient({
-    name: name.value.trim(),
-    surname: surname.value.trim(),
-    lastname: lastname.value.trim(),
-    contacts: contacts,
-  });
-
-  if (client) {
-    document.querySelectorAll(".contact").forEach((el) => el.remove());
-    document.querySelector(".add-client__add-contact").classList.remove("open");
-    document.getElementById("modal-add").classList.remove("open");
-
-    name.value = "";
-    surname.value = "";
-    lastname.value = "";
-    input.value = "";
-    document.querySelector(".load").style.display = "block";
-    await renderTable();
-    document.querySelector(".load").style.display = "none";
-    resetModal();
   }
-});
+})
 
 
 // События
@@ -635,7 +647,7 @@ document.body.addEventListener("click", async (e) => {
         input.value = contact.value;
 
         if (contact.type === "Email") {
-          input.setAttribute("type", "email");
+          input.setAttribute("type", "text");
         } else if (contact.type === "Доп. телефон") {
           input.setAttribute("type", "tel");
         } else if (["Vk", "Facebook"].includes(contact.type)) {
@@ -698,7 +710,7 @@ document.body.addEventListener("click", (e) => {
 
     const isAsc = sortSvg.classList.toggle("icon--transform");
 
-    const sortedClients = [...clientsArray].sort((a, b) => {
+    const sortedClients = [...allClients].sort((a, b) => {
       return isAsc ? b.id - a.id : a.id - b.id;
     });
 
@@ -722,7 +734,7 @@ document.body.addEventListener("click", (e) => {
 
     const isAsc = sortSvg.classList.toggle("icon--transform");
 
-    const sortedClients = [...clientsArray].sort((a, b) => {
+    const sortedClients = [...allClients].sort((a, b) => {
       const nameCompare = a.name.localeCompare(b.name);
       if (nameCompare !== 0) return isAsc ? nameCompare : -nameCompare;
       return isAsc
@@ -749,7 +761,7 @@ document.body.addEventListener("click", (e) => {
 
     const isAsc = sortSvg.classList.toggle("icon--transform");
 
-    const sortedClients = [...clientsArray].sort((a, b) => {
+    const sortedClients = [...allClients].sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
       return isAsc ? dateB - dateA : dateA - dateB;
@@ -769,12 +781,13 @@ document.body.addEventListener("click", (e) => {
 // Сортировка по дате изменения
 document.body.addEventListener("click", (e) => {
   if (e.target.classList.contains("js-sort-change")) {
+    console.log(1)
     const sortSvg = document.querySelector(".js-icon-change");
     const clientsWrap = document.querySelector(".clients__content");
 
     const isAsc = sortSvg.classList.toggle("icon--transform");
 
-    const sortedClients = [...clientsArray].sort((a, b) => {
+    const sortedClients = [...allClients].sort((a, b) => {
       const dateA = new Date(a.updatedAt);
       const dateB = new Date(b.updatedAt);
       return isAsc ? dateB - dateA : dateA - dateB;

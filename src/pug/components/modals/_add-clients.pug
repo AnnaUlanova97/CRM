@@ -1,7 +1,7 @@
 mixin add-client
     div.add-client
         div.add-client__box
-            form(action="").add-client__content.js-form-add
+            div.add-client__content.js-form-add
                 button.modal-wrap__close.js-btn-modal-toggle
                     +svg-icon('close-form', 'close-icon')
                 h2.add-client__title Новый клиент
@@ -9,10 +9,10 @@ mixin add-client
                 div.add-client__form
                     div.input.input--required
                         p Фамилия
-                        input(type="text" required).input__surname
+                        input(type="text").input__surname
                     div.input.input--required 
                         p Имя
-                        input(type="text" required).input__name
+                        input(type="text").input__name
                     div.input
                         p Отчество
                         input(type="text").input__lastname
@@ -21,7 +21,7 @@ mixin add-client
                     button(type="button").add-client__btn.js-modal-btn Добавить контакт
                         +svg-icon('add_circle_outline', 'add-icon')
                 div.add-client__actions
-                    button.btn-primary.js-btn-save(type='submit') Сохранить
+                    button.btn-primary.js-btn-save Сохранить
                         div.load
                     button.btn__delete.js-btn-modal-toggle Отмена
 
